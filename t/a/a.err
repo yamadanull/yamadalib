@@ -1,1 +1,0 @@
-a.out: a.cpp:22: yamada::V<int> cal(yamada::ll, yamada::vl, yamada::ll): Assertion `inLR(0LL,st,G)' failed.

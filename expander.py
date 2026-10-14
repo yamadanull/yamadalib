@@ -5,8 +5,9 @@ import datetime
 
 nw = datetime.datetime.now()
 print("/**")
-print(" * date   : " + nw.strftime("%Y-%m-%d %H:%M:%S"))
-print(" * author : yamadanull")
+print(" * date    : " + nw.strftime("%Y-%m-%d %H:%M:%S"))
+print(" * author  : yamadanull")
+print(" * library : https://github.com/yamadanull/yamadalib/")
 print(" */")
 print()
 include_pattern = re.compile(r'^\s*#include\s+"([^"]+)"\s*$')

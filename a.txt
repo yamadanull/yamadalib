@@ -1,9 +1,0 @@
-OUT(true) で Yes を出力させるようにしたら？
-
-ranges::input_range && !convertible_to<R, string> って危険じゃない？
-string 以外の型でも出力可能かつ ranges になる可能性がある
-
-インデントの設定がしたい
-文の中で改行するときにデフォルトがゴミ
-
-ハイライト表示をもっと目立たせたい
