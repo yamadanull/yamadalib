@@ -1,8 +1,5 @@
-#include "../../template/template.hpp"
+#include "../../template/multitest-template.hpp"
  
 void yamada::solve()
 {
-	IN(S=STR);
-	S[0]^=32;
-	out(string("Of")+S);
 }
