@@ -1,0 +1,64 @@
+{
+  "contest": {
+    "id": "arc209",
+    "title": "AtCoder Regular Contest 209 (Div. 1)",
+    "url": "https://atcoder.jp/contests/arc209"
+  },
+  "tasks": [
+    {
+      "id": "arc209_a",
+      "label": "A",
+      "title": "Bracket Game",
+      "url": "https://atcoder.jp/contests/arc209/tasks/arc209_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc209_b",
+      "label": "B",
+      "title": "Minimize Even Palindrome",
+      "url": "https://atcoder.jp/contests/arc209/tasks/arc209_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc209_c",
+      "label": "C",
+      "title": "Adjusting a Rectangle",
+      "url": "https://atcoder.jp/contests/arc209/tasks/arc209_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc209_d",
+      "label": "D",
+      "title": "A_A_i",
+      "url": "https://atcoder.jp/contests/arc209/tasks/arc209_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc209_e",
+      "label": "E",
+      "title": "I hate ABC",
+      "url": "https://atcoder.jp/contests/arc209/tasks/arc209_e",
+      "directory": {
+        "path": "e",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

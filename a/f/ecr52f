@@ -1,0 +1,126 @@
+#include "../../template/template.hpp"
+#include "../../monoid/basic.hpp"
+#include "../../tree/heavy-light-decomposition.hpp"
+#include "../../segment-tree/segment-tree.hpp"
+#include "../../graph/graph-template.hpp"
+
+void yamada::solve()
+{
+	ini(N,K);
+	UnweightedGraph g(N);
+	rep(i,1,N){
+		ini(p); --p;
+		g[p].eb(i);
+	}
+	/* rep(u,N)out(u,":",g[u]); */
+
+	HeavyLightDecomposition hld(g);
+	V<int> lim(N);
+	{
+		V<int> cur(N);
+		int cur_id=0;
+		auto dfs=[&](auto&& self,int u,int dep)->void{
+			if(K<=dep){
+				lim[u]=cur[dep-K];
+			}
+			cur[dep]=u;
+			each(v,g[u])self(self,v,dep+1);
+		}; dfs(dfs,0,0);
+	}
+	auto Limit=[&](int u)->int{ return lim[u]; };
+	auto Time=[&](int u)->int{ return hld.idx(u).fi; };
+	V<int> A; // time to vertex
+	VV<int> grs;
+	{
+		V<int> init(N,-1);
+		rep(u,N){
+			int t=Time(u);
+			if(g[u].empty())init[t]=u;
+		}
+		SegmentTree<Monoid::Max<int,-1>> seg(init); // unvis
+
+		auto dfs=[&](auto&& self,int u)->void{
+			seg.set(Time(u),-1);
+
+			int m=Limit(u);
+			while(1){
+				int v=-1;
+				auto F=[&](int l,int r){
+					amax(v,seg(l,r));
+				};
+				hld.subtree_query(m,true,F);
+				if(v<0){ A.eb(u); return; }
+				self(self,v);
+			}
+		};
+		rep(u,N)if(g[u].empty()){
+			if(seg[Time(u)].a<0)continue;
+			dfs(dfs,u);
+		}
+		/* out("A:",A); */
+		reverse(all(A));
+		assert(seg().a<0);
+
+		VV<int> leafs(N);
+		rep(u,N)if(g[u].empty()){
+			int v=Limit(u);
+			leafs[v].eb(u);
+		}
+
+		V<int> cnt(N); rep(u,N)cnt[u]=leafs[u].size();
+		rep(u,N){
+			if(cnt[u])seg.set(Time(u),u);
+			else seg.set(Time(u),-1);
+		}
+
+		V<bool> vis(N);
+		auto efs=[&](auto&& self,int u)->void{
+			vis[u]=1;
+			{
+				int m=Limit(u);
+				if(!--cnt[m])seg.set(Time(m),-1);
+			}
+			grs.back().eb(u);
+
+			/* out(u,":"); */
+			/* wout("seg: "); rep(i,N)wout(seg[i],""); out(); */
+			/* out("cnt:",cnt); */
+			while(1){
+				int m=-1;
+				auto F=[&](int l,int r){
+					amax(m,seg(l,r));
+				};
+				hld.path_query(0,u,true,F);
+				/* out("m:",m); */
+				if(m<0)return;
+
+				while(vis[leafs[m].back()])leafs[m].pop_back();
+				int v=leafs[m].back();
+				self(self,v);
+			}
+		};
+		each(u,A){
+			if(vis[u])continue;
+			grs.eb();
+			efs(efs,u);
+		}
+		/* each(gr,grs)out("gr:",gr); */
+	}
+
+	int n=grs.size();
+	reverse(all(grs));
+
+	SegmentTree<Monoid::Max<int,-inf>> seg(V<int>(N,0));
+	each(gr,grs){
+		int cur=0;
+		auto F=[&](int l,int r){
+			amax(cur,seg(l,r));
+		};
+		each(u,gr){
+			hld.subtree_query(Limit(u),true,F);
+		}
+		cur+=gr.size();
+		each(u,gr)seg.set(Time(u),cur);
+	}
+	out(seg());
+}

@@ -1,0 +1,53 @@
+{
+  "contest": {
+    "id": "arc202",
+    "title": "AtCoder Regular Contest 202 (Div. 1)",
+    "url": "https://atcoder.jp/contests/arc202"
+  },
+  "tasks": [
+    {
+      "id": "arc202_a",
+      "label": "A",
+      "title": "Merge and Increment",
+      "url": "https://atcoder.jp/contests/arc202/tasks/arc202_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc202_b",
+      "label": "B",
+      "title": "Japanese \"Knight's Tour\"",
+      "url": "https://atcoder.jp/contests/arc202/tasks/arc202_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc202_c",
+      "label": "C",
+      "title": "Repunits",
+      "url": "https://atcoder.jp/contests/arc202/tasks/arc202_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc202_d",
+      "label": "D",
+      "title": "King",
+      "url": "https://atcoder.jp/contests/arc202/tasks/arc202_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "contest": {
+    "id": "arc207",
+    "title": "AtCoder Regular Contest 207 (Div.1)",
+    "url": "https://atcoder.jp/contests/arc207"
+  },
+  "tasks": [
+    {
+      "id": "arc207_a",
+      "label": "A",
+      "title": "Affinity for Artifacts",
+      "url": "https://atcoder.jp/contests/arc207/tasks/arc207_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc207_b",
+      "label": "B",
+      "title": "Balanced Neighbors 2",
+      "url": "https://atcoder.jp/contests/arc207/tasks/arc207_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc207_c",
+      "label": "C",
+      "title": "Combine to Make Non-decreasing",
+      "url": "https://atcoder.jp/contests/arc207/tasks/arc207_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc207_d",
+      "label": "D",
+      "title": "Devourers and Cake",
+      "url": "https://atcoder.jp/contests/arc207/tasks/arc207_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc207_e",
+      "label": "E",
+      "title": "Erase and Append",
+      "url": "https://atcoder.jp/contests/arc207/tasks/arc207_e",
+      "directory": {
+        "path": "e",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

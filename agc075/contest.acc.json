@@ -1,0 +1,64 @@
+{
+  "contest": {
+    "id": "agc075",
+    "title": "AtCoder Grand Contest 075",
+    "url": "https://atcoder.jp/contests/agc075"
+  },
+  "tasks": [
+    {
+      "id": "agc075_a",
+      "label": "A",
+      "title": "Divide Grid",
+      "url": "https://atcoder.jp/contests/agc075/tasks/agc075_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc075_b",
+      "label": "B",
+      "title": "Traffic Light",
+      "url": "https://atcoder.jp/contests/agc075/tasks/agc075_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc075_c",
+      "label": "C",
+      "title": "Minimization of Divide",
+      "url": "https://atcoder.jp/contests/agc075/tasks/agc075_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc075_d",
+      "label": "D",
+      "title": "Max Prod Plus",
+      "url": "https://atcoder.jp/contests/agc075/tasks/agc075_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc075_e",
+      "label": "E",
+      "title": "Many Optimization Problems",
+      "url": "https://atcoder.jp/contests/agc075/tasks/agc075_e",
+      "directory": {
+        "path": "e",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

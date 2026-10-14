@@ -1,0 +1,64 @@
+{
+  "contest": {
+    "id": "arc230",
+    "title": "AtCoder Regular Contest++ 230",
+    "url": "https://atcoder.jp/contests/arc230"
+  },
+  "tasks": [
+    {
+      "id": "arc230_a",
+      "label": "A",
+      "title": "Meeting on Tree",
+      "url": "https://atcoder.jp/contests/arc230/tasks/arc230_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc230_b",
+      "label": "B",
+      "title": "Chmax and Chmin",
+      "url": "https://atcoder.jp/contests/arc230/tasks/arc230_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc230_c",
+      "label": "C",
+      "title": "Buildings",
+      "url": "https://atcoder.jp/contests/arc230/tasks/arc230_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc230_d",
+      "label": "D",
+      "title": "Min Max Matrix",
+      "url": "https://atcoder.jp/contests/arc230/tasks/arc230_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc230_e",
+      "label": "E",
+      "title": "Minister",
+      "url": "https://atcoder.jp/contests/arc230/tasks/arc230_e",
+      "directory": {
+        "path": "e",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

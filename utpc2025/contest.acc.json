@@ -1,0 +1,163 @@
+{
+  "contest": {
+    "id": "utpc2025",
+    "title": "UTPC 2025",
+    "url": "https://atcoder.jp/contests/utpc2025"
+  },
+  "tasks": [
+    {
+      "id": "utpc2025_a",
+      "label": "A",
+      "title": "Apparently Make UTPC",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "utpc2025_b",
+      "label": "B",
+      "title": "Binary Tree Counting",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "utpc2025_c",
+      "label": "C",
+      "title": "Convex Crusher",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "utpc2025_d",
+      "label": "D",
+      "title": "Divisible by 11",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "utpc2025_e",
+      "label": "E",
+      "title": "Exchange or Not",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_e",
+      "directory": {
+        "path": "e",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "utpc2025_f",
+      "label": "F",
+      "title": "Finite Bracket Sequence",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_f",
+      "directory": {
+        "path": "f",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "utpc2025_g",
+      "label": "G",
+      "title": "Greatest Bracket Sequence",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_g",
+      "directory": {
+        "path": "g",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "utpc2025_h",
+      "label": "H",
+      "title": "Heyawake-like Problem",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_h",
+      "directory": {
+        "path": "h",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "utpc2025_i",
+      "label": "I",
+      "title": "Inversion Graph",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_i",
+      "directory": {
+        "path": "i",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "utpc2025_j",
+      "label": "J",
+      "title": "Jelly",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_j",
+      "directory": {
+        "path": "j",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "utpc2025_k",
+      "label": "K",
+      "title": "Keep or Gamble",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_k",
+      "directory": {
+        "path": "k",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "utpc2025_l",
+      "label": "L",
+      "title": "Linear Floor",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_l",
+      "directory": {
+        "path": "l",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "utpc2025_m",
+      "label": "M",
+      "title": "Max Conference",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_m",
+      "directory": {
+        "path": "m",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "utpc2025_n",
+      "label": "N",
+      "title": "Numerical Error",
+      "url": "https://atcoder.jp/contests/utpc2025/tasks/utpc2025_n",
+      "directory": {
+        "path": "n",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

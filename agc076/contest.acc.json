@@ -1,0 +1,64 @@
+{
+  "contest": {
+    "id": "agc076",
+    "title": "AtCoder Grand Contest 076",
+    "url": "https://atcoder.jp/contests/agc076"
+  },
+  "tasks": [
+    {
+      "id": "agc076_a",
+      "label": "A",
+      "title": "Hamming-Distant Arrays",
+      "url": "https://atcoder.jp/contests/agc076/tasks/agc076_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc076_b",
+      "label": "B",
+      "title": "Split and Reverse",
+      "url": "https://atcoder.jp/contests/agc076/tasks/agc076_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc076_c",
+      "label": "C",
+      "title": "Slime Eat Slime",
+      "url": "https://atcoder.jp/contests/agc076/tasks/agc076_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc076_d",
+      "label": "D",
+      "title": "Stochastic Dominance",
+      "url": "https://atcoder.jp/contests/agc076/tasks/agc076_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc076_e",
+      "label": "E",
+      "title": "Squared Norm Maximization",
+      "url": "https://atcoder.jp/contests/agc076/tasks/agc076_e",
+      "directory": {
+        "path": "e",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

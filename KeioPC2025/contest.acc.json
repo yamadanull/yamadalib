@@ -1,0 +1,207 @@
+{
+  "contest": {
+    "id": "KeioPC2025",
+    "title": "慶應義塾大学プログラミングコンテスト 2025",
+    "url": "https://atcoder.jp/contests/KeioPC2025"
+  },
+  "tasks": [
+    {
+      "id": "KeioPC2025_a",
+      "label": "A",
+      "title": "I Love MST Problem",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_b",
+      "label": "B",
+      "title": "Cumulative Sum Minimization",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_c",
+      "label": "C",
+      "title": "Addictive Addition",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_d",
+      "label": "D",
+      "title": "Can I Press Them All?",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_e",
+      "label": "E",
+      "title": "Reversed Number Sum",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_e",
+      "directory": {
+        "path": "e",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_f",
+      "label": "F",
+      "title": "Dislike 321",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_f",
+      "directory": {
+        "path": "f",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_g",
+      "label": "G",
+      "title": "Treasure Collection",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_g",
+      "directory": {
+        "path": "g",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_h",
+      "label": "H",
+      "title": "Takosan Takusan",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_h",
+      "directory": {
+        "path": "h",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_i",
+      "label": "I",
+      "title": "Odd Even Partition",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_i",
+      "directory": {
+        "path": "i",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_j",
+      "label": "J",
+      "title": "Moving Pieces on Namori",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_j",
+      "directory": {
+        "path": "j",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_k",
+      "label": "K",
+      "title": "Loaded Dice",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_k",
+      "directory": {
+        "path": "k",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_l",
+      "label": "L",
+      "title": "Many Max Streak Problems",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_l",
+      "directory": {
+        "path": "l",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_m",
+      "label": "M",
+      "title": "Popcount MST",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_m",
+      "directory": {
+        "path": "m",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_n",
+      "label": "N",
+      "title": "Times Table Sum",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_n",
+      "directory": {
+        "path": "n",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_o",
+      "label": "O",
+      "title": "Three Constraints",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_o",
+      "directory": {
+        "path": "o",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_p",
+      "label": "P",
+      "title": "Making Arithmetic Progression",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_p",
+      "directory": {
+        "path": "p",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_q",
+      "label": "Q",
+      "title": "Colorful Wristbands",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_q",
+      "directory": {
+        "path": "q",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "KeioPC2025_r",
+      "label": "R",
+      "title": "Many Strings",
+      "url": "https://atcoder.jp/contests/KeioPC2025/tasks/KeioPC2025_r",
+      "directory": {
+        "path": "r",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

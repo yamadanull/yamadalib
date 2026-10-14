@@ -1,0 +1,64 @@
+{
+  "contest": {
+    "id": "arc203",
+    "title": "AtCoder Regular Contest 203 (Div. 2)",
+    "url": "https://atcoder.jp/contests/arc203"
+  },
+  "tasks": [
+    {
+      "id": "arc203_a",
+      "label": "A",
+      "title": "All Winners",
+      "url": "https://atcoder.jp/contests/arc203/tasks/arc203_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc203_b",
+      "label": "B",
+      "title": "Swap If Equal Sum",
+      "url": "https://atcoder.jp/contests/arc203/tasks/arc203_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc203_c",
+      "label": "C",
+      "title": "Destruction of Walls",
+      "url": "https://atcoder.jp/contests/arc203/tasks/arc203_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc203_d",
+      "label": "D",
+      "title": "Insert XOR",
+      "url": "https://atcoder.jp/contests/arc203/tasks/arc203_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc203_e",
+      "label": "E",
+      "title": "Tile Grid with One Hole",
+      "url": "https://atcoder.jp/contests/arc203/tasks/arc203_e",
+      "directory": {
+        "path": "e",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

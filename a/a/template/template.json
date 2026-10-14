@@ -1,0 +1,18 @@
+{
+  "task": {
+    "submit": "a.cpp",
+    "program": [
+      "a.cpp",
+      "r.cpp",
+      "m.cpp",
+	  "monoid.hpp",
+	  "acted.hpp",
+	  "group.hpp"
+    ],
+    "static": [
+      "a.sh",
+	  "r.sh"
+    ]
+  }
+}
+

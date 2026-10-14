@@ -1,0 +1,83 @@
+{
+  // Place your snippets for cpp here. Each snippet is defined under a snippet name and has a prefix, body and
+  // description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+  // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the
+  // same ids are connected.
+  // Example:
+  // "Print to console": {
+  // "prefix": "log",
+  // "body": [
+  // "console.log('$1');",
+  // "$2"
+  // ],
+  // "description": "Log output to console"
+  // }
+  "solve_function": {
+    "prefix": "_sol_old",
+    "body": [
+      "#include \"template/template.hpp\"",
+      "//",
+      "",
+      "using namespace Nyaan;",
+      "",
+      "void Nyaan::solve(){",
+      "  $0",
+      "}"
+    ],
+    "description": "solve_function"
+  },
+  "sol2": {
+		"prefix": "_sol",
+		"body": "#include \"template/template.hpp\"\r\n//\r\n\r\nusing namespace Nyaan;\r\n\r\nvoid q() {\r\n  $0\r\n}\r\n\r\nvoid Nyaan::solve() {\r\n  int t = 1;\r\n  // in(t);\r\n  while (t--) q();\r\n}",
+		"description": ""
+	},
+  "_mint": {
+    "prefix": "_mint",
+    "body": [
+      "#include \"modint/montgomery-modint.hpp\"",
+      "#include \"modulo/binomial.hpp\"",
+      "//",
+      "using namespace Nyaan;",
+      "using mint = LazyMontgomeryModInt<998244353>;",
+      "// using mint = LazyMontgomeryModInt<1000000007>;",
+      "using vm = vector<mint>;",
+      "using vvm = vector<vm>;",
+      "Binomial<mint> C;",
+      ""
+    ],
+    "description": "_mint"
+  },
+  "fps": {
+    "prefix": "_fps",
+    "body": [
+      "#include \"modint/montgomery-modint.hpp\"",
+      "#include \"modulo/binomial.hpp\"",
+      "#include \"fps/ntt-friendly-fps.hpp\"",
+      "// #include \"fps/arbitrary-fps.hpp\"",
+      "//",
+      "using namespace Nyaan;",
+      "using mint = LazyMontgomeryModInt<998244353>;",
+      "// using mint = LazyMontgomeryModInt<1000000007>;",
+      "using vm = vector<mint>;",
+      "using vvm = vector<vm>;",
+      "Binomial<mint> C;",
+      "using fps = FormalPowerSeries<mint>;"
+    ],
+    "description": "fps"
+  },
+  "_dijkstra": {
+    "prefix": "_grid_dijkstra",
+    "body": "// H, W, gは決め打ち\r\n// T : 辺の重みの型\r\nV<vl> d(H, vl(W, -1));\r\nusing T = long long;\r\nusing Data = pair<T, pair<int, int>>;\r\npriority_queue<Data, vector<Data>, greater<Data>> Q;\r\n\r\n// 上下左右 (UDLR) の順番\r\nint di[] = {-1, 1, 0, 0};\r\nint dj[] = {0, 0, -1, 1};\r\nauto ok = [&](int i, int j) -> bool {\r\n  return 0 <= i and i < H and 0 <= j and j < W;\r\n};\r\n// c != ' ' の場合、g[i][j] が c のときのみ遷移する\r\nauto add = [&](int i, int j, T cost, char c = ' ') -> void {\r\n  if (!ok(i, j)) return;\r\n  if (c != ' ' and c != g[i][j]) return;\r\n  if (d[i][j] == -1 or cost < d[i][j]) {\r\n    Q.emplace(cost, make_pair(i, j));\r\n    d[i][j] = cost;\r\n  }\r\n};\r\n\r\n// 始点の設定\r\nint SX = 0, SY = 0;\r\nadd(SX, SY, 0);\r\n\r\nwhile (!Q.empty()) {\r\n  auto [cost, pa] = Q.top();\r\n  auto [i, j] = pa;\r\n  Q.pop();\r\n  if (d[i][j] != cost) continue;\r\n\r\n  /*\r\n  for (int k = 0; k < 4; k++) {\r\n    int ni = i + di[k], nj = j + dj[k];\r\n\r\n    add(ni, nj, , );\r\n  }\r\n  */\r\n}",
+    "description": ""
+  },
+  "_dfs": {
+    "prefix": "_dfs",
+    "body": "auto dfs = [&](auto rc, int c, int p = -1,\r\n                [[maybe_unused]] ll dat = 0) -> void {\r\n  \r\n  for (auto& d : g[c]) {\r\n    if (d == p) continue;\r\n    rc(rc, d, c);\r\n  }\r\n};\r\ndfs(dfs, 0);",
+    "description": ""
+  },
+  "_bfs": {
+    "prefix": "_bfs",
+    "body": "auto bfs = [&](int st) {\r\n  queue<int> Q;\r\n  Q.push(st);\r\n  while (!Q.empty()) {\r\n    int c = Q.front();\r\n    Q.pop();\r\n    for (auto d : g[c]) {\r\n      if (/* already visited */ false) continue;\r\n      Q.push(d);\r\n      \r\n      // write down here\r\n      \r\n    }\r\n  }\r\n};\r\nbfs(0);",
+    "description": ""
+  },
+}

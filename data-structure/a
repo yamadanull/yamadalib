@@ -1,0 +1,21 @@
+struct block {
+	// T 要素の型 E 作用素の型
+	using T = pair<mint,ll>;
+	using E = bool;
+	block() {}
+
+	int i;
+	// i ... 何個目のブロックか
+	// i * DIV + j ... (jをブロック内のidxとして)全体でのidx
+	int idx(int j) const { return i * DIV + j; }
+	// 変数とブロックの初期化を忘れない！
+	void init(int _) {
+		i = _;
+	}
+	void update(int j, E x) {
+	}
+	T query_all() {
+	}
+	T query_part(int l, int r) {
+	}
+};

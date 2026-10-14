@@ -1,0 +1,10 @@
+Monoid の要件
+・value_type
+・O
+・I
+・COMMUTATIVE
+
+ActedMonoid の要件
+Monoid_X
+Monoid_A
+O

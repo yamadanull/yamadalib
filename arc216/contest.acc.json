@@ -1,0 +1,64 @@
+{
+  "contest": {
+    "id": "arc216",
+    "title": "AtCoder Regular Contest++ 216",
+    "url": "https://atcoder.jp/contests/arc216"
+  },
+  "tasks": [
+    {
+      "id": "arc216_a",
+      "label": "A",
+      "title": "Reversi 3",
+      "url": "https://atcoder.jp/contests/arc216/tasks/arc216_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc216_b",
+      "label": "B",
+      "title": "Range Mex Sum",
+      "url": "https://atcoder.jp/contests/arc216/tasks/arc216_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc216_c",
+      "label": "C",
+      "title": "Count Power of 2",
+      "url": "https://atcoder.jp/contests/arc216/tasks/arc216_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc216_d",
+      "label": "D",
+      "title": "GCD of Product of Arithmetic Progression",
+      "url": "https://atcoder.jp/contests/arc216/tasks/arc216_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc216_e",
+      "label": "E",
+      "title": "Swap or Reverse",
+      "url": "https://atcoder.jp/contests/arc216/tasks/arc216_e",
+      "directory": {
+        "path": "e",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

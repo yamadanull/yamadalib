@@ -1,0 +1,64 @@
+{
+  "contest": {
+    "id": "agc074",
+    "title": "AtCoder Grand Contest 074",
+    "url": "https://atcoder.jp/contests/agc074"
+  },
+  "tasks": [
+    {
+      "id": "agc074_a",
+      "label": "A",
+      "title": "Communicate Topological Order",
+      "url": "https://atcoder.jp/contests/agc074/tasks/agc074_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc074_b",
+      "label": "B",
+      "title": "Swap if Equal Length and Sum",
+      "url": "https://atcoder.jp/contests/agc074/tasks/agc074_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc074_c",
+      "label": "C",
+      "title": "PORALIS",
+      "url": "https://atcoder.jp/contests/agc074/tasks/agc074_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc074_d",
+      "label": "D",
+      "title": "Valid Output for DSU Problems",
+      "url": "https://atcoder.jp/contests/agc074/tasks/agc074_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc074_e",
+      "label": "E",
+      "title": "Delete AB",
+      "url": "https://atcoder.jp/contests/agc074/tasks/agc074_e",
+      "directory": {
+        "path": "e",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

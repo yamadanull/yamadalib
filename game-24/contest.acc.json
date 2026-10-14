@@ -1,0 +1,273 @@
+{
+  "contest": {
+    "id": "game-24",
+    "title": "組合せゲーム 24 題",
+    "url": "https://atcoder.jp/contests/game-24"
+  },
+  "tasks": [
+    {
+      "id": "game_a",
+      "label": "A",
+      "title": "Nim",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_b",
+      "label": "B",
+      "title": "Chocolate",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_c",
+      "label": "C",
+      "title": "Domino in Tetromino 1",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_d",
+      "label": "D",
+      "title": "Parallel Nim",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_e",
+      "label": "E",
+      "title": "Restricted Nim 1",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_e",
+      "directory": {
+        "path": "e",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_f",
+      "label": "F",
+      "title": "Necklace 1",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_f",
+      "directory": {
+        "path": "f",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_g",
+      "label": "G",
+      "title": "Round Nim",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_g",
+      "directory": {
+        "path": "g",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_h",
+      "label": "H",
+      "title": "Lexicographic Order Game",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_h",
+      "directory": {
+        "path": "h",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_i",
+      "label": "I",
+      "title": "Necklace 2",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_i",
+      "directory": {
+        "path": "i",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_j",
+      "label": "J",
+      "title": "Restricted Nim 2",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_j",
+      "directory": {
+        "path": "j",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_k",
+      "label": "K",
+      "title": "Domino in Tetromino 2",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_k",
+      "directory": {
+        "path": "k",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_l",
+      "label": "L",
+      "title": "Unfair Nim",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_l",
+      "directory": {
+        "path": "l",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_m",
+      "label": "M",
+      "title": "LRUD Game",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_m",
+      "directory": {
+        "path": "m",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_n",
+      "label": "N",
+      "title": "One and All",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_n",
+      "directory": {
+        "path": "n",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_o",
+      "label": "O",
+      "title": "Moving Pieces on Grid",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_o",
+      "directory": {
+        "path": "o",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_p",
+      "label": "P",
+      "title": "Game on Tree",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_p",
+      "directory": {
+        "path": "p",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_q",
+      "label": "Q",
+      "title": "Moving Pieces on Graph",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_q",
+      "directory": {
+        "path": "q",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_r",
+      "label": "R",
+      "title": "Delete and Divide",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_r",
+      "directory": {
+        "path": "r",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_s",
+      "label": "S",
+      "title": "Odd and Even",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_s",
+      "directory": {
+        "path": "s",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_t",
+      "label": "T",
+      "title": "Consecutive Move Game",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_t",
+      "directory": {
+        "path": "t",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_u",
+      "label": "U",
+      "title": "Rectangle Flip Game",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_u",
+      "directory": {
+        "path": "u",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_v",
+      "label": "V",
+      "title": "Delete Game",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_v",
+      "directory": {
+        "path": "v",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_w",
+      "label": "W",
+      "title": "Parity Game",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_w",
+      "directory": {
+        "path": "w",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "game_x",
+      "label": "X",
+      "title": "XOR Bag",
+      "url": "https://atcoder.jp/contests/game-24/tasks/game_x",
+      "directory": {
+        "path": "x",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

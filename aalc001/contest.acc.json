@@ -1,0 +1,273 @@
+{
+  "contest": {
+    "id": "aalc001",
+    "title": "AAL Contest 001: Let's use segtree!",
+    "url": "https://atcoder.jp/contests/aalc001"
+  },
+  "tasks": [
+    {
+      "id": "aalc001_a",
+      "label": "A",
+      "title": "Segment Tree",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_b",
+      "label": "B",
+      "title": "Lazy Segment Tree",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_c",
+      "label": "C",
+      "title": "Binary Search on a Segment Tree",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_d",
+      "label": "D",
+      "title": "Inversion Count",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_e",
+      "label": "E",
+      "title": "RGB",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_e",
+      "directory": {
+        "path": "e",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_f",
+      "label": "F",
+      "title": "Run",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_f",
+      "directory": {
+        "path": "f",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_g",
+      "label": "G",
+      "title": "Sum of k-th Powers",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_g",
+      "directory": {
+        "path": "g",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_h",
+      "label": "H",
+      "title": "Add and Mod",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_h",
+      "directory": {
+        "path": "h",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_i",
+      "label": "I",
+      "title": "Subarray",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_i",
+      "directory": {
+        "path": "i",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_j",
+      "label": "J",
+      "title": "Long Binary String",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_j",
+      "directory": {
+        "path": "j",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_k",
+      "label": "K",
+      "title": "Multiset",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_k",
+      "directory": {
+        "path": "k",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_l",
+      "label": "L",
+      "title": "Swap between Arrays",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_l",
+      "directory": {
+        "path": "l",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_m",
+      "label": "M",
+      "title": "NAND",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_m",
+      "directory": {
+        "path": "m",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_n",
+      "label": "N",
+      "title": "Times Tables",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_n",
+      "directory": {
+        "path": "n",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_o",
+      "label": "O",
+      "title": "Minimum Value",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_o",
+      "directory": {
+        "path": "o",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_p",
+      "label": "P",
+      "title": "Connect the Dots",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_p",
+      "directory": {
+        "path": "p",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_q",
+      "label": "Q",
+      "title": "Number of Moves",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_q",
+      "directory": {
+        "path": "q",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_r",
+      "label": "R",
+      "title": "Connectivity",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_r",
+      "directory": {
+        "path": "r",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_s",
+      "label": "S",
+      "title": "Absolute Value",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_s",
+      "directory": {
+        "path": "s",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_t",
+      "label": "T",
+      "title": "K-Inversion Count",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_t",
+      "directory": {
+        "path": "t",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_u",
+      "label": "U",
+      "title": "Second",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_u",
+      "directory": {
+        "path": "u",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_v",
+      "label": "V",
+      "title": "Connectivity 2",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_v",
+      "directory": {
+        "path": "v",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_w",
+      "label": "W",
+      "title": "Adjacent Add",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_w",
+      "directory": {
+        "path": "w",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "aalc001_x",
+      "label": "X",
+      "title": "Unevenness",
+      "url": "https://atcoder.jp/contests/aalc001/tasks/aalc001_x",
+      "directory": {
+        "path": "x",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}
