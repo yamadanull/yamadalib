@@ -3,13 +3,15 @@
 
 void yamada::solve()
 {
-	ll TC=1;
-	/* out(TC); */
+	ll TC=100;
+	out(TC);
 	rep(TC){
-		ll N=2499;
-		vl A{4,8,6,9};
-		string S;
-		rep(N)S+=A[randint(0,3)]+'0';
-		out(S);
+		ll N=randint(6,11);
+		ll K=randint(1,N+1);
+		auto A=mkiota(N);
+		randshf(A);
+
+		out(N,K);
+		out(A|Ofs());
 	}
 }

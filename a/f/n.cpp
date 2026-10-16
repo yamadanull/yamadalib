@@ -1,56 +1,35 @@
-#include "../../template/template.hpp"
+#include "../../template/multitest-template.hpp"
 using namespace yamada;
 
-bool naive(ll A,ll B,ll C){
-	auto res=[&](ll u)->tuple<ll,ll,ll>{
-		ll ans=u/(B*C);
-		u%=(B*C);
-		ll bns=u/C;
-		u%=C;
-		return{ans,bns,u};
+bool cal(){
+	IN(N,K,P=--INT*N);
+	auto check=[&](ll msk)->bool{
+		vl A,B;
+		rep(i,N)(msk>>i&1?A:B).eb(P[i]);
+		Sort(A);
+		Sort(B);
+		vl C(N);
+		for(ll ai=0,bi=0,i=0; i<N; i++){
+			C[i]=msk>>i&1? A[ai++]:B[bi++];
+		}
+		each(a,b,C|Adjacent<2>)if(a>b)return 0;
+		return 1;
 	};
+	VVV(char,memo,2,1<<N,1<<N,2);
+	return [&](this auto dfs,bool alice,ll msk,ll nsk)->bool{
+		assert((msk&nsk)==0);
+		auto&& mm=memo[alice][msk][nsk];
+		if(mm<2)return mm;
+		if((msk|nsk)==MSK(N))return mm=!(check(msk)^alice);
 
-	vl X{1,2,3};
-	vvv(bool,dp,A,B,C);
-	map<VVV<bool>,bool> mp;
-	auto dfs=[&](auto&& self,ll u)->bool{
-		auto[I,J,K]=res(u);
-		if(I==A)return 1;
-		if(dp[I][J][K])return self(self,u+1);
-		if(mp.count(dp))return mp[dp];
-
-		bool ans=0;
-		auto F=[&](auto P){
-			auto x=X;
-			rep(i,3)x[i]=X[P[i]];
-			bool fn=1;
-			rep(i,I,I+x[0])rep(j,J,K+x[1])rep(k,K,K+x[2]){
-				if(!inLR(0LL,i,A))fn=0;
-				else if(!inLR(0LL,j,B))fn=0;
-				else if(!inLR(0LL,k,C))fn=0;
-				else if(dp[i][j][k])fn=0;
-			}
-			if(!fn)return;
-			rep(i,I,I+x[0])rep(j,J,K+x[1])rep(k,K,K+x[2])dp[i][j][k]=1;
-			ans|=self(self,u+1);
-			rep(i,I,I+x[0])rep(j,J,K+x[1])rep(k,K,K+x[2])dp[i][j][k]=0;
-		};
-		nxp(3,F);
-		return mp[dp]=ans;
-	};
-	return dfs(dfs,0);
+		rep(p,2)rep(ksk,1,1<<N)if((msk&ksk)==0 && (nsk&ksk)==0 && popcnt(ksk)<=K){
+			if(!dfs(!alice,p?msk:msk|ksk,!p?nsk:nsk|ksk))return mm=1;
+		}
+		return mm=0;
+	}(1,0,0);
 }
 
 void yamada::solve()
 {
-	ll N=3;
-	inl(a,b,c);
-	/* vl A{a,b,c}; */
-	/* bool ans=0; */
-	/* rep(i,N)if(A[i]%2==0)rep(j,N)if(A[j]%3==0)if(i!=j){ */
-	/* 	ans=1; */
-	/* } */
-	/* if((a*b*c)%6==0 && (a+b+c)%6==0)ans=1; */
-	/* YesNo(ans); */
-	YesNo(naive(a,b,c));
+	out(cal()?"Alice":"Bob");
 }

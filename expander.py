@@ -18,12 +18,10 @@ REMOVE_LINES = {
 	'#define yamadaLocal',
 }
 
-
 def expand_file(path, included):
 	path = os.path.realpath(path)
 
-	if path in included:
-		return []
+	if path in included: return []
 
 	included.add(path)
 
@@ -34,16 +32,12 @@ def expand_file(path, included):
 		print(f'Error: {path}: {e}', file=sys.stderr)
 		return []
 
-	result = []
+	ret = []
 
 	for line in lines:
 		stripped = line.strip()
-
-		if stripped in REMOVE_LINES:
-			continue
-
+		if stripped in REMOVE_LINES: continue
 		match = include_pattern.match(line)
-
 		if match:
 			relative_path = match.group(1)
 			include_path = os.path.join(
@@ -54,31 +48,22 @@ def expand_file(path, included):
 			include_path = os.path.realpath(include_path)
 
 			if include_path not in included:
-				result.append(
+				ret.append(
 					f'// ===== BEGIN INCLUDE: {relative_path} =====\n'
 				)
-
-				result.extend(
+				ret.extend(
 					expand_file(include_path, included)
 				)
-
-				result.append(
+				ret.append(
 					f'// ===== END INCLUDE: {relative_path} =====\n'
 				)
-		else:
-			result.append(line)
-
-	return result
-
+		else: ret.append(line)
+	return ret
 
 def main():
 	path = input().strip()
-
 	included = set()
-	result = expand_file(path, included)
+	ret = expand_file(path, included)
+	sys.stdout.write(''.join(ret))
 
-	sys.stdout.write(''.join(result))
-
-
-if __name__ == '__main__':
-	main()
+if __name__ == '__main__': main()

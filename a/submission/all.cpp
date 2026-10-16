@@ -1,8 +1,181 @@
 /**
- * date   : 2026-10-14 15:20:24
- * author : yamadanull
+ * date    : 2026-10-15 22:41:39
+ * author  : yamadanull
+ * library : https://github.com/yamadanull/yamadalib/
  */
 
+// ===== BEGIN INCLUDE: ../../monoid/minidx.hpp =====
+
+#include <utility>
+#include <limits>
+
+namespace MONOID {
+
+template <typename E, E INF = std::numeric_limits<E>::max(), bool tie_is_left = true>
+struct MinIdx {
+	using value_type = std::pair<E, int>;
+	static constexpr bool is_small(const value_type& x, const value_type& y) {
+		if (x.first < y.first) return true;
+		if (x.first > y.first) return false;
+		return !tie_is_left xor x.second < y.second;
+	}
+	static constexpr value_type O(const value_type& x, const value_type& y) {
+		return is_small(x, y) ? x : y;
+	}
+	static constexpr value_type I() { return {INF, -1}; }
+	static constexpr bool COMMUTATIVE = true;
+};
+
+} // namespace monoid
+// ===== END INCLUDE: ../../monoid/minidx.hpp =====
+// ===== BEGIN INCLUDE: ../../segment-tree/segment-tree.hpp =====
+#include <algorithm>
+#include <cassert>
+#include <vector>
+
+template <typename Monoid>
+struct SegmentTree {
+	using X = typename Monoid::value_type;
+	std::vector<X> dat;
+	int N, LOG, size;
+
+	SegmentTree() {}
+	SegmentTree(int N) { build(N); }
+	template <typename F>
+	SegmentTree(int N, F init) { build(N, init); }
+	template <std::ranges::input_range R>
+	SegmentTree(const R& v) { build(v); }
+
+	void build(int m) {
+		build(m, [](int i) -> X { return Monoid::I(); });
+	}
+	template <std::ranges::input_range R>
+	void build(const R& v) {
+		build(v.size(), [&](int i) -> X { return v[i]; });
+	}
+	template <typename F>
+	void build(int m, F init) {
+		N = m, LOG = 1;
+		while ((1 << LOG) < N) ++LOG;
+		size = 1 << LOG;
+		dat.assign(size << 1, Monoid::I());
+		for (int i = 0; i < N; i++) dat[size + i] = init(i);
+		for (int i = size - 1; i >= 1; i--) update(i);
+	}
+
+	X get(int i) const { return dat[size + i]; }
+	std::vector<X> get() const { return {dat.begin() + size, dat.begin() + size + N}; }
+
+	void update(int i) { dat[i] = Monoid::O(dat[2 * i], dat[2 * i + 1]); }
+	void set(int i, const X x) {
+		assert(i < N);
+		dat[i += size] = x;
+		while (i >>= 1) update(i);
+	}
+
+	void multiply(int i, const X x) {
+		assert(i < N);
+		i += size;
+		dat[i] = Monoid::O(dat[i], x);
+		while (i >>= 1) update(i);
+	}
+
+	X prod(int L, int R) const {
+		assert(0 <= L && L <= R && R <= N);
+		X vl = Monoid::I(), vr = Monoid::I();
+		L += size, R += size;
+		while (L < R) {
+			if (L & 1) vl = Monoid::O(vl, dat[L++]);
+			if (R & 1) vr = Monoid::O(dat[--R], vr);
+			L >>= 1, R >>= 1;
+		}
+		return Monoid::O(vl, vr);
+	}
+
+	std::vector<int> prod_ids(int L, int R) const {
+		assert(0 <= L && L <= R && R <= N);
+		std::vector<int> I, J;
+		L += size, R += size;
+		while (L < R) {
+			if (L & 1) I.emplace_back(L++);
+			if (R & 1) J.emplace_back(--R);
+			L >>= 1, R >>= 1;
+		}
+		std::ranges::reverse(J);
+		I.resize(I.size() + J.size());
+		for (int j = 0; j < (int)J.size(); j++) I[(int)I.size() - (int)J.size() + j] = J[j];
+		return I;
+	}
+
+	X prod() const { return dat[1]; }
+	template <typename... Args>
+	X operator()(Args... args) { return prod(args...); }
+	template <typename... Args>
+	X operator[](Args... args) { return get(args...); }
+
+	template <typename F>
+	int max_right(int L, F check) const {
+		assert(0 <= L && L <= N && check(Monoid::I()));
+		if (L == N) return N;
+		L += size;
+		X sm = Monoid::I();
+		do {
+			while (L % 2 == 0) L >>= 1;
+			if (!check(Monoid::O(sm, dat[L]))) {
+				while (L < size) {
+					L = 2 * L;
+					if (check(Monoid::O(sm, dat[L]))) {
+						sm = Monoid::O(sm, dat[L++]);
+					}
+				}
+				return L - size;
+			}
+			sm = Monoid::O(sm, dat[L++]);
+		} while ((L & -L) != L);
+		return N;
+	}
+
+	template <typename F>
+	int min_left(int R, F check) const {
+		assert(0 <= R && R <= N && check(Monoid::I()));
+		if (R == 0) return 0;
+		R += size;
+		X sm = Monoid::I();
+		do {
+			--R;
+			while (R > 1 && (R % 2)) R >>= 1;
+			if (!check(Monoid::O(dat[R], sm))) {
+				while (R < size) {
+					R = 2 * R + 1;
+					if (check(Monoid::O(dat[R], sm))) {
+						sm = Monoid::O(dat[R--], sm);
+					}
+				}
+				return R + 1 - size;
+			}
+			sm = Monoid::O(dat[R], sm);
+		} while ((R & -R) != R);
+		return 0;
+	}
+
+	// prod_{l<=i<r} A[i xor x]
+	X xor_prod(int l, int r, int xor_val) const {
+		static_assert(Monoid::COMMUTATIVE);
+		X x = Monoid::I();
+		for (int k = 0; k < LOG + 1; ++k) {
+			if (l >= r) break;
+			if (l & 1) {
+				x = Monoid::O(x, dat[(size >> k) + ((l++) ^ xor_val)]);
+			}
+			if (r & 1) {
+				x = Monoid::O(x, dat[(size >> k) + ((--r) ^ xor_val)]);
+			}
+			l /= 2, r /= 2, xor_val /= 2;
+		}
+		return x;
+	}
+};
+// ===== END INCLUDE: ../../segment-tree/segment-tree.hpp =====
 // ===== BEGIN INCLUDE: ../../template/template.hpp =====
 
 #include <bits/stdc++.h>
@@ -272,8 +445,11 @@ string tof(const mint &a) {
 			}
 		}
 	}
-	return "!NF";
+	return "!NF"; // Not Found
 }
+
+template <typename mint>
+constexpr auto Tof = views::transform(tof<mint, 1000>);
 
 } // namespace yamada
 // ===== END INCLUDE: util.hpp =====
@@ -462,16 +638,15 @@ void trace(const T&... x) {
 // ===== END INCLUDE: io.hpp =====
 // ===== BEGIN INCLUDE: io-extension.hpp =====
 namespace yamada {
-// https://github.com/tatyam-prime/kyopro_library/blob/master/template/cpin.md
 namespace ioImpl {
 
-struct GEN_CMD {};
+struct EVAL_TAG {};
 template <class T> T read() { T x{}; cin >> x; return x; }
 template <class F>
 struct GEN {
 	F f;
 	auto operator()(long long i = 0) const { return f(i); }
-	auto operator=(GEN_CMD) const { return (*this)(); }
+	auto operator=(EVAL_TAG) const { return (*this)(); }
 
 	template<class A>
 	auto to(auto n) const {
@@ -512,6 +687,18 @@ struct GEN {
 	auto operator++() const {
 		return ioImpl::GEN{[p = *this](long long i) { return p(i) + 1; }};
 	}
+	auto uz() { // UnZip
+		return ioImpl::GEN{[p = *this](long long i) {
+			auto v = p(i);
+			using T = ranges::range_value_t<decltype(v)>;
+			return [&]<size_t... I>(index_sequence<I...>) {
+				tuple<vector<tuple_element_t<I, T>>...> ans;
+				((get<I>(ans).reserve(v.size())), ...);
+				for (auto &x : v) ((get<I>(ans).push_back(get<I>(x))), ...);
+				return ans;
+			}(make_index_sequence<tuple_size_v<T>>{});
+		}};
+	}
 };
 
 template <class T>
@@ -545,6 +732,7 @@ using ioImpl::TP;
 
 #define FN(i,...) yamada::ioImpl::GEN{[&](long long i) { return (__VA_ARGS__); }} // これ衝突怖い
 #define IN(...) __VA_OPT__(IOIMPL_E3(IOIMPL_EACH(__VA_ARGS__))) // これ衝突怖い
+#define BIND(...) ([__VA_ARGS__])
 
 #define IOIMPL_E0(...) __VA_ARGS__
 #define IOIMPL_E1(...) IOIMPL_E0(IOIMPL_E0(IOIMPL_E0(__VA_ARGS__)))
@@ -553,10 +741,22 @@ using ioImpl::TP;
 #define IOIMPL_LP ()
 #define IOIMPL_NEXT() IOIMPL_EACH
 #define IOIMPL_EACH(e,...) IOIMPL_ITEM(e) __VA_OPT__(IOIMPL_NEXT IOIMPL_LP (__VA_ARGS__))
-#define IOIMPL_ITEM(e) auto e = [] { \
-	if constexpr (std::string_view{#e}.contains('=')) return yamada::ioImpl::GEN_CMD{}; \
+#define IOIMPL_ITEM(e) auto IOIMPL_NORMALIZE(e) = [] { \
+	if constexpr (std::string_view{#e}.contains('=')) return yamada::ioImpl::EVAL_TAG{}; \
 	else return yamada::ioImpl::LL(); \
 }();
+
+#define IOIMPL_PROBE(...) ~, 1,
+#define IOIMPL_CHECK_N(_0, _1, ...) _1
+#define IOIMPL_CHECK(...) IOIMPL_CHECK_N(__VA_ARGS__, 0)
+#define IOIMPL_IS_PAREN(x) IOIMPL_CHECK(IOIMPL_PROBE x)
+
+#define IOIMPL_UNPAREN(...) __VA_ARGS__
+#define IOIMPL_STRIP_0(x) x
+#define IOIMPL_STRIP_1(x) IOIMPL_UNPAREN x
+#define IOIMPL_STRIP_IMPL(b,x) IOIMPL_STRIP_##b(x)
+#define IOIMPL_STRIP(b,x) IOIMPL_STRIP_IMPL(b,x)
+#define IOIMPL_NORMALIZE(x) IOIMPL_STRIP(IOIMPL_IS_PAREN(x),x)
 // ===== END INCLUDE: io-extension.hpp =====
 // ===== BEGIN INCLUDE: ranges.hpp =====
 namespace yamada {
@@ -650,7 +850,6 @@ constexpr auto Ofs(const int K = 1) { return views::transform(bind(plus(), _1, K
 				b, vector<vector<type>>(c, vector<type>(__VA_ARGS__))))
 
 #define DIE(...) do { yamada::out(__VA_ARGS__); return; } while (0)
-#define ZIN(...) for (auto&& [__VA_ARGS__] : std::views::zip(__VA_ARGS__)) yamada::in(__VA_ARGS__)
 // ===== END INCLUDE: macro.hpp =====
 
 namespace yamada {
@@ -661,6 +860,7 @@ int main() { yamada::solve(); }
  
 void yamada::solve()
 {
-	IN(r,g,b);
-	YESNO((g*10+b)%4==0);
+	IN(N,A=PR(LL,IDX)*N);
+	SegmentTree<MONOID::MinIdx<ll>> seg(A);
+	out(seg().se+1);
 }

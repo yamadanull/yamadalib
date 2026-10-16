@@ -36,4 +36,3 @@
 				b, vector<vector<type>>(c, vector<type>(__VA_ARGS__))))
 
 #define DIE(...) do { yamada::out(__VA_ARGS__); return; } while (0)
-#define ZIN(...) for (auto&& [__VA_ARGS__] : std::views::zip(__VA_ARGS__)) yamada::in(__VA_ARGS__)

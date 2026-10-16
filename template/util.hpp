@@ -185,11 +185,11 @@ T bisect(T ok, T ng, F f) { // ok < ng でも ok > ng でも可能 // f(ok) && !
 }
 
 template <typename T, typename F>
-T bisect(F f) { // 思考停止用 // 判定回数は上限を決め打ちした場合の高々２倍程度
+T bisect(F f) { // 判定回数は上限を決め打ちした場合の高々２倍程度 // f(0) && !f(inf) が必要
 	T ok = 0, ng = 1;
 	while (f(ng)) ng *= 2;
 	while (ng - ok > 1) { T mid = ok + (ng - ok) / 2; (f(mid) ? ok : ng) = mid; } 
-	return ok;
+	return ng;
 }
 
 template <typename T, typename F>
@@ -261,7 +261,10 @@ string tof(const mint &a) {
 			}
 		}
 	}
-	return "!NF";
+	return "!NF"; // Not Found
 }
+
+template <typename mint>
+constexpr auto Tof = views::transform(tof<mint, 1000>);
 
 } // namespace yamada
