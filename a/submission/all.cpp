@@ -1,5 +1,5 @@
 /**
- * date    : 2026-10-16 22:37:23
+ * date    : 2026-10-17 22:25:17
  * author  : yamadanull
  * library : https://github.com/yamadanull/yamadalib/
  */
@@ -685,41 +685,588 @@ void solve();
 }
 int main() { yamada::solve(); }
 // ===== END INCLUDE: ../../template/template.hpp =====
-using namespace yamada;
+// ===== BEGIN INCLUDE: ../../segment-tree/lazy-segment-tree-utility.hpp =====
 
-ll F(vint A){
-	ll ans=0;
-	each(i,a,A|Enumerate)ans|=i&a;
-	return ans;
-}
+// ===== BEGIN INCLUDE: ../monoid/add-max.hpp =====
 
-map<pl,vint> memo;
-vint cal(ll N,ll K){
-	if(memo.count(mkp(N,K)))return memo[mkp(N,K)];
-	if(N==1){
-		return memo[mkp(N,K)]={0};
+// ===== BEGIN INCLUDE: add.hpp =====
+
+namespace MONOID {
+
+template <typename E>
+struct Add {
+	using value_type = E;
+	static constexpr value_type O(const value_type& x, const value_type& y) noexcept { return x + y; }
+	static constexpr value_type inverse(const value_type &x) noexcept { return -x; }
+	static constexpr value_type power(const value_type& x, long long n) noexcept { return value_type(n) * x; }
+	static constexpr value_type I() { return value_type(0); }
+	static constexpr bool COMMUTATIVE = true;
+};
+
+} // namespace monoid
+// ===== END INCLUDE: add.hpp =====
+// ===== BEGIN INCLUDE: max.hpp =====
+
+#include <algorithm>
+#include <limits>
+
+namespace MONOID {
+
+template <typename E, E MNF = std::numeric_limits<E>::min()>
+struct Max {
+	using value_type = E;
+	static constexpr value_type O(const value_type& x, const value_type& y) { return std::max(x, y); }
+	static constexpr value_type I() { return MNF; }
+	static constexpr bool COMMUTATIVE = true;
+};
+
+} // namespace monoid
+// ===== END INCLUDE: max.hpp =====
+
+namespace ACTED_MONOID {
+
+template <typename E, E MNF = std::numeric_limits<E>::min()>
+struct Add_Max {
+	using Monoid_X = MONOID::Max<E, MNF>;
+	using Monoid_A = MONOID::Add<E>;
+	using X = typename Monoid_X::value_type; // E
+	using A = typename Monoid_A::value_type; // E
+	static constexpr X O(const X& x, const A& a, const long long) {
+		return x == MNF ? x : x + a;
 	}
-	ll T=msb(N-1);
-	ll n=N-(1<<T);
-	auto ans=cal(1<<T,K);
-	auto bns=cal(n,K);
-	each(b,bns)b|=1<<T;
-	if(K>>T&1){
-		each(b,bns)ans.eb(b);
-		return memo[mkp(N,K)]=ans;
+};
+
+} // namespace ACTED_MONOID
+
+// ===== END INCLUDE: ../monoid/add-max.hpp =====
+// ===== BEGIN INCLUDE: ../monoid/add-min.hpp =====
+
+// ===== BEGIN INCLUDE: min.hpp =====
+
+#include <algorithm>
+#include <limits>
+
+namespace MONOID {
+
+template <typename E, E INF = std::numeric_limits<E>::max()>
+struct Min {
+	using value_type = E;
+	static constexpr value_type O(const value_type& x, const value_type& y) { return std::min(x, y); }
+	static constexpr value_type I() { return INF; }
+	static constexpr bool COMMUTATIVE = true;
+};
+
+} // namespace monoid
+// ===== END INCLUDE: min.hpp =====
+
+namespace ACTED_MONOID {
+
+template <typename E, E INF = std::numeric_limits<E>::max()>
+struct Add_Min {
+	using Monoid_X = MONOID::Min<E, INF>;
+	using Monoid_A = MONOID::Add<E>;
+	using X = typename Monoid_X::value_type; // E
+	using A = typename Monoid_A::value_type; // E
+	static constexpr X O(const X& x, const A& a, const long long) { return x + a; }
+};
+
+} // namespace ACTED_MONOID
+
+// ===== END INCLUDE: ../monoid/add-min.hpp =====
+// ===== BEGIN INCLUDE: ../monoid/add-sum.hpp =====
+
+
+namespace ACTED_MONOID {
+
+template <typename E>
+struct Add_Sum {
+	using Monoid_X = MONOID::Add<E>;
+	using Monoid_A = MONOID::Add<E>;
+	using X = typename Monoid_X::value_type; // E
+	using A = typename Monoid_A::value_type; // E
+	static constexpr X O(const X& x, const A& a, const long long &size) {
+		return x + a * E(size);
 	}
-	else{
-		each(a,ans|Drop(n))bns.eb(a);
-		each(a,ans|Take(n))bns.eb(a);
-		return memo[mkp(N,K)]=bns;
+};
+
+} // namespace ACTED_MONOID
+
+// ===== END INCLUDE: ../monoid/add-sum.hpp =====
+// ===== BEGIN INCLUDE: ../monoid/update-max.hpp =====
+
+// ===== BEGIN INCLUDE: update.hpp =====
+
+#include <optional>
+
+namespace MONOID {
+
+template <typename T>
+struct Update {
+	using value_type = std::optional<T>;
+	static constexpr value_type O(const value_type& x, const value_type& y) { return y.has_value() ? y : x; }
+	static constexpr value_type I() { return std::nullopt; }
+	static constexpr bool COMMUTATIVE = false;
+};
+
+} // namespace monoid
+// ===== END INCLUDE: update.hpp =====
+
+namespace ACTED_MONOID {
+
+template <typename E, E MNF = std::numeric_limits<E>::min()>
+struct Update_Max {
+	using Monoid_X = MONOID::Max<E, MNF>;
+	using Monoid_A = MONOID::Update<E>;
+	using X = typename Monoid_X::value_type; // E
+	using A = typename Monoid_A::value_type; // optional<E>
+	static constexpr X O(const X& x, A& a, const long long) {
+		return a.has_value() ? a.value() : x;
 	}
-}
+};
+
+} // namespace ACTED_MONOID
+
+// ===== END INCLUDE: ../monoid/update-max.hpp =====
+// ===== BEGIN INCLUDE: ../monoid/update-min.hpp =====
+
+
+namespace ACTED_MONOID {
+
+template <typename E, E INF = std::numeric_limits<E>::max()>
+struct Update_Min {
+	using Monoid_X = MONOID::Min<E, INF>;
+	using Monoid_A = MONOID::Update<E>;
+	using X = typename Monoid_X::value_type; // E
+	using A = typename Monoid_A::value_type; // optional<E>
+	static constexpr X O(const X& x, const A& a, const long long) {
+		return a.has_value() ? a : x;
+	}
+};
+
+} // namespace ACTED_MONOID
+
+// ===== END INCLUDE: ../monoid/update-min.hpp =====
+// ===== BEGIN INCLUDE: ../monoid/update-sum.hpp =====
+
+
+namespace ACTED_MONOID {
+
+template <typename E>
+struct Update_Sum {
+	using Monoid_X = MONOID::Add<E>;
+	using Monoid_A = MONOID::Update<E>;
+	using X = typename Monoid_X::value_type; // E
+	using A = typename Monoid_A::value_type; // optional<E>
+	static constexpr X O(const X& x, const A& a, const long long &size) {
+		return a.has_value() ? a.value() * E(size) : x;
+	}
+};
+
+} // namespace ACTED_MONOID
+
+// ===== END INCLUDE: ../monoid/update-sum.hpp =====
+// ===== BEGIN INCLUDE: segment-tree.hpp =====
+#include <algorithm>
+#include <cassert>
+#include <vector>
+
+template <typename Monoid>
+struct SegmentTree {
+	using X = typename Monoid::value_type;
+	std::vector<X> dat;
+	int N, LOG, size;
+
+	SegmentTree() {}
+	SegmentTree(int N) { build(N); }
+	template <typename F>
+	SegmentTree(int N, F init) { build(N, init); }
+	template <std::ranges::input_range R>
+	SegmentTree(const R& v) { build(v); }
+
+	void build(int m) {
+		build(m, [](int i) -> X { return Monoid::I(); });
+	}
+	template <std::ranges::input_range R>
+	void build(const R& v) {
+		build(v.size(), [&](int i) -> X { return v[i]; });
+	}
+	template <typename F>
+	void build(int m, F init) {
+		N = m, LOG = 1;
+		while ((1 << LOG) < N) ++LOG;
+		size = 1 << LOG;
+		dat.assign(size << 1, Monoid::I());
+		for (int i = 0; i < N; i++) dat[size + i] = init(i);
+		for (int i = size - 1; i >= 1; i--) update(i);
+	}
+
+	X get(int i) const { return dat[size + i]; }
+	std::vector<X> get() const { return {dat.begin() + size, dat.begin() + size + N}; }
+
+	void update(int i) { dat[i] = Monoid::O(dat[2 * i], dat[2 * i + 1]); }
+	void set(int i, const X x) {
+		assert(i < N);
+		dat[i += size] = x;
+		while (i >>= 1) update(i);
+	}
+
+	void multiply(int i, const X x) {
+		assert(i < N);
+		i += size;
+		dat[i] = Monoid::O(dat[i], x);
+		while (i >>= 1) update(i);
+	}
+
+	X prod(int L, int R) const {
+		assert(0 <= L && L <= R && R <= N);
+		X vl = Monoid::I(), vr = Monoid::I();
+		L += size, R += size;
+		while (L < R) {
+			if (L & 1) vl = Monoid::O(vl, dat[L++]);
+			if (R & 1) vr = Monoid::O(dat[--R], vr);
+			L >>= 1, R >>= 1;
+		}
+		return Monoid::O(vl, vr);
+	}
+
+	std::vector<int> prod_ids(int L, int R) const {
+		assert(0 <= L && L <= R && R <= N);
+		std::vector<int> I, J;
+		L += size, R += size;
+		while (L < R) {
+			if (L & 1) I.emplace_back(L++);
+			if (R & 1) J.emplace_back(--R);
+			L >>= 1, R >>= 1;
+		}
+		std::ranges::reverse(J);
+		I.resize(I.size() + J.size());
+		for (int j = 0; j < (int)J.size(); j++) I[(int)I.size() - (int)J.size() + j] = J[j];
+		return I;
+	}
+
+	X prod() const { return dat[1]; }
+	template <typename... Args>
+	X operator()(Args... args) { return prod(args...); }
+	template <typename... Args>
+	X operator[](Args... args) { return get(args...); }
+
+	template <typename F>
+	int max_right(int L, F check) const {
+		assert(0 <= L && L <= N && check(Monoid::I()));
+		if (L == N) return N;
+		L += size;
+		X sm = Monoid::I();
+		do {
+			while (L % 2 == 0) L >>= 1;
+			if (!check(Monoid::O(sm, dat[L]))) {
+				while (L < size) {
+					L = 2 * L;
+					if (check(Monoid::O(sm, dat[L]))) {
+						sm = Monoid::O(sm, dat[L++]);
+					}
+				}
+				return L - size;
+			}
+			sm = Monoid::O(sm, dat[L++]);
+		} while ((L & -L) != L);
+		return N;
+	}
+
+	template <typename F>
+	int min_left(int R, F check) const {
+		assert(0 <= R && R <= N && check(Monoid::I()));
+		if (R == 0) return 0;
+		R += size;
+		X sm = Monoid::I();
+		do {
+			--R;
+			while (R > 1 && (R % 2)) R >>= 1;
+			if (!check(Monoid::O(dat[R], sm))) {
+				while (R < size) {
+					R = 2 * R + 1;
+					if (check(Monoid::O(dat[R], sm))) {
+						sm = Monoid::O(dat[R--], sm);
+					}
+				}
+				return R + 1 - size;
+			}
+			sm = Monoid::O(dat[R], sm);
+		} while ((R & -R) != R);
+		return 0;
+	}
+
+	// prod_{l<=i<r} A[i xor x]
+	X xor_prod(int l, int r, int xor_val) const {
+		static_assert(Monoid::COMMUTATIVE);
+		X x = Monoid::I();
+		for (int k = 0; k < LOG + 1; ++k) {
+			if (l >= r) break;
+			if (l & 1) {
+				x = Monoid::O(x, dat[(size >> k) + ((l++) ^ xor_val)]);
+			}
+			if (r & 1) {
+				x = Monoid::O(x, dat[(size >> k) + ((--r) ^ xor_val)]);
+			}
+			l /= 2, r /= 2, xor_val /= 2;
+		}
+		return x;
+	}
+};
+// ===== END INCLUDE: segment-tree.hpp =====
+// ===== BEGIN INCLUDE: lazy-segment-tree.hpp =====
+#include <vector>
+#include <cassert>
+
+template <typename ActedMonoid>
+struct LazySegmentTree {
+	using MX = typename ActedMonoid::Monoid_X;
+	using MA = typename ActedMonoid::Monoid_A;
+	using X = typename MX::value_type;
+	using A = typename MA::value_type;
+	int N, LOG, size;
+	std::vector<X> dat;
+	std::vector<A> laz;
+	std::vector<bool> has_laz;
+
+	LazySegmentTree() {}
+	LazySegmentTree(int N) { build(N); }
+	template <typename F>
+	LazySegmentTree(int N, F init) { build(N, init); }
+	template <std::ranges::input_range R>
+	LazySegmentTree(const R& v) { build(v); }
+
+	void build(int m) {
+		build(m, [](int i) -> X { return MX::I(); });
+	}
+	template <std::ranges::input_range R>
+	void build(const R& v) {
+		build(v.size(), [&](int i) -> X { return v[i]; });
+	}
+	template <typename F>
+	void build(int m, F init) {
+		N = m, LOG = 1;
+		while ((1 << LOG) < N) ++LOG;
+		size = 1 << LOG;
+		dat.assign(size << 1, MX::I());
+		laz.assign(size, MA::I());
+		has_laz.assign(size, false);
+		for (int i = 0; i < N; i++) dat[size + i] = init(i);
+		for (int i = size - 1; i >= 1; i--) update(i);
+	}
+
+	void update(int k) { dat[k] = MX::O(dat[2 * k], dat[2 * k + 1]); }
+	void set(int p, X x) {
+		assert(0 <= p && p < N);
+		p += size;
+		for (int i = LOG; i >= 1; i--) push(p >> i);
+		dat[p] = x;
+		for (int i = 1; i <= LOG; i++) update(p >> i);
+	}
+	void multiply(int p, const X& x) {
+		assert(0 <= p && p < N);
+		p += size;
+		for (int i = LOG; i >= 1; i--) push(p >> i);
+		dat[p] = MX::O(dat[p], x);
+		for (int i = 1; i <= LOG; i++) update(p >> i);
+	}
+
+	X get(int p) {
+		assert(0 <= p && p < N);
+		p += size;
+		for (int i = LOG; i >= 1; i--) push(p >> i);
+		return dat[p];
+	}
+
+	std::vector<X> get() {
+		for (int k = 0; k < size; k++) push(k);
+		return {dat.begin() + size, dat.begin() + size + N};
+	}
+
+	X prod(int l, int r) {
+		assert(0 <= l && l <= r && r <= N);
+		if (l == r) return MX::I();
+		l += size, r += size;
+		for (int i = LOG; i >= 1; i--) {
+			if (((l >> i) << i) != l) push(l >> i);
+			if (((r >> i) << i) != r) push((r - 1) >> i);
+		}
+		X xl = MX::I(), xr = MX::I();
+		while (l < r) {
+			if (l & 1) xl = MX::O(xl, dat[l++]);
+			if (r & 1) xr = MX::O(dat[--r], xr);
+			l >>= 1, r >>= 1;
+		}
+		return MX::O(xl, xr);
+	}
+
+	X prod() { return dat[1]; }
+	template <typename... Args>
+	X operator()(Args... args) { return prod(args...); }
+	template <typename... Args>
+	X operator[](Args... args) { return get(args...); }
+
+	void apply(int l, int r, A a) {
+		assert(0 <= l && l <= r && r <= N);
+		if (l == r) return;
+		l += size, r += size;
+		for (int i = LOG; i >= 1; i--) {
+			if (((l >> i) << i) != l) push(l >> i);
+			if (((r >> i) << i) != r) push((r - 1) >> i);
+		}
+		int l2 = l, r2 = r;
+		while (l < r) {
+			if (l & 1) apply_at(l++, a);
+			if (r & 1) apply_at(--r, a);
+			l >>= 1, r >>= 1;
+		}
+		l = l2, r = r2;
+		for (int i = 1; i <= LOG; i++) {
+			if (((l >> i) << i) != l) update(l >> i);
+			if (((r >> i) << i) != r) update((r - 1) >> i);
+		}
+	}
+
+	template <typename F>
+	int max_right(int l, const F check) {
+		assert(0 <= l && l <= N);
+		assert(check(MX::I()));
+		if (l == N) return N;
+		l += size;
+		for (int i = LOG; i >= 1; i--) push(l >> i);
+		X sm = MX::I();
+		do {
+			while (l % 2 == 0) l >>= 1;
+			if (!check(MX::O(sm, dat[l]))) {
+				while (l < size) {
+					push(l);
+					l = (2 * l);
+					if (check(MX::O(sm, dat[l]))) {
+						sm = MX::O(sm, dat[l++]);
+					}
+				}
+				return l - size;
+			}
+			sm = MX::O(sm, dat[l++]);
+		} while ((l & -l) != l);
+		return N;
+	}
+
+	template <typename F>
+	int min_left(int r, const F check) {
+		assert(0 <= r && r <= N);
+		assert(check(MX::I()));
+		if (r == 0) return 0;
+		r += size;
+		for (int i = LOG; i >= 1; i--) push((r - 1) >> i);
+		X sm = MX::I();
+		do {
+			r--;
+			while (r > 1 && (r % 2)) r >>= 1;
+			if (!check(MX::O(dat[r], sm))) {
+				while (r < size) {
+					push(r);
+					r = (2 * r + 1);
+					if (check(MX::O(dat[r], sm))) {
+						sm = MX::O(dat[r--], sm);
+					}
+				}
+				return r + 1 - size;
+			}
+			sm = MX::O(dat[r], sm);
+		} while ((r & -r) != r);
+		return 0;
+	}
+
+	// l <= i xor (xor_val) < r となる i 全体に apply
+	void apply_xor_range(int l, int r, int xor_val, A a) {
+		assert(!(N & (N - 1)));
+		assert(0 <= xor_val && xor_val < N);
+		assert(0 <= l && l <= r && r <= N);
+
+		auto dfs = [&](auto& dfs, int idx, int seg_l, int seg_r) -> void {
+			if (l <= seg_l && seg_r <= r) {
+				return apply_at(idx, a);
+			}
+			if (r <= seg_l || seg_r <= l) return;
+			push(idx);
+			int seg_m = (seg_l + seg_r) / 2;
+			int bit = (seg_r - seg_l) / 2;
+			int left = 2 * idx + 0, right = 2 * idx + 1;
+			if (xor_val & bit) std::swap(left, right);
+			dfs(dfs, left, seg_l, seg_m);
+			dfs(dfs, right, seg_m, seg_r);
+			update(idx);
+		};
+		dfs(dfs, 1, 0, N);
+	}
+
+	private:
+	inline int msb(const int &a) { return a ? 31 - __builtin_clz(a) : -1; }
+	void apply_at(int k, A a) {
+		long long sz = 1 << (LOG - msb(k));
+		dat[k] = ActedMonoid::O(dat[k], a, sz);
+		if (k < size) has_laz[k] = 1, laz[k] = MA::O(laz[k], a);
+	}
+	void push(int k) {
+		if (!has_laz[k]) return;
+		has_laz[k] = 0;
+		apply_at(2 * k, laz[k]), apply_at(2 * k + 1, laz[k]);
+		laz[k] = MA::I();
+	}
+};
+// ===== END INCLUDE: lazy-segment-tree.hpp =====
+
+template <typename T>
+using sum_segtree = SegmentTree<MONOID::Add<T>>;
+template <typename T>
+using min_segtree = SegmentTree<MONOID::Min<T>>;
+template <typename T>
+using max_segtree = SegmentTree<MONOID::Max<T>>;
+
+template <typename T>
+using addmax_lazyseg = LazySegmentTree<ACTED_MONOID::Add_Max<T>>;
+template <typename T>
+using addmin_lazyseg = LazySegmentTree<ACTED_MONOID::Add_Min<T>>;
+template <typename T>
+using addsum_lazyseg = LazySegmentTree<ACTED_MONOID::Add_Sum<T>>;
+template <typename T>
+using updatemax_lazyseg = LazySegmentTree<ACTED_MONOID::Update_Max<T>>;
+template <typename T>
+using updatemin_lazyseg = LazySegmentTree<ACTED_MONOID::Update_Min<T>>;
+template <typename T>
+using updatesum_lazyseg = LazySegmentTree<ACTED_MONOID::Update_Sum<T>>;
+
+// ===== END INCLUDE: ../../segment-tree/lazy-segment-tree-utility.hpp =====
 
 void yamada::solve()
 {
-	IN(N,K);
-	if(!YesNo(msb(N-1)>=msb(K)))return;
-	fout(mkiota(N));
-	fout(cal(N,K));
-	assert(F(cal(N,K))==K);
+	IN(N,A=LL*N);
+	auto Amn=A;
+	auto Amx=A;
+	rep(i,1,N)amin(Amn[i],Amn[i-1]);
+	rep(i,1,N)amax(Amx[i],Amx[i-1]);
+	addmin_lazyseg<ll> seg(vl(N+1,infLL)); // max[i,I]+min[i,I] +ans[0,i)
+	seg.set(0,0);
+
+	vl stkmx{0},stkmn{0};
+	rep(I,1,N){
+		while(!stkmx.empty() && A[stkmx.back()]<=A[I]){
+			ll i=stkmx.back(); stkmx.pop_back();
+			ll i2=stkmx.empty()? -1:stkmx.back();
+			seg.apply(i2+1,i+1,A[I]-A[i]);
+		}
+		while(!stkmn.empty() && A[stkmn.back()]>=A[I]){
+			ll i=stkmn.back(); stkmn.pop_back();
+			ll i2=stkmn.empty()? -1:stkmn.back();
+			seg.apply(i2+1,i+1,-A[I]+A[i]);
+		}
+		stkmn.eb(I);
+		stkmx.eb(I);
+
+		ll ans=Amx[I]-Amn[I];
+		amin(ans,seg(1,I));
+		seg.set(I+1,ans);
+		err(seg.get());
+	}
+	out(seg[N]);
 }

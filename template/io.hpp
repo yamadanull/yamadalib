@@ -33,7 +33,8 @@ ostream& operator<<(ostream& os, __uint128_t x) {
 	if (x == 0) return os << 0;
 	string S;
 	while (x) S.push_back('0' + x % 10), x /= 10;
-	ranges::reverse(S); return os << S;
+	ranges::reverse(S);
+	return os << S;
 }
 
 template <class T> // tuple / pair / array
@@ -122,8 +123,9 @@ template <TupleLike T> void dump(const T&);
 template <ListLike R>
 void dump(const R& a) {
 	bool f{};
+	cerr << "[ ";
 	for (const auto& x : a) {
-		cerr << (exchange(f, 1) ? ", " : "[ ");
+		cerr << (exchange(f, 1) ? ", " : "");
 		dump(x);
 	}
 	cerr << " ]";
