@@ -1,181 +1,9 @@
 /**
- * date    : 2026-10-15 22:41:39
+ * date    : 2026-10-16 22:37:23
  * author  : yamadanull
  * library : https://github.com/yamadanull/yamadalib/
  */
 
-// ===== BEGIN INCLUDE: ../../monoid/minidx.hpp =====
-
-#include <utility>
-#include <limits>
-
-namespace MONOID {
-
-template <typename E, E INF = std::numeric_limits<E>::max(), bool tie_is_left = true>
-struct MinIdx {
-	using value_type = std::pair<E, int>;
-	static constexpr bool is_small(const value_type& x, const value_type& y) {
-		if (x.first < y.first) return true;
-		if (x.first > y.first) return false;
-		return !tie_is_left xor x.second < y.second;
-	}
-	static constexpr value_type O(const value_type& x, const value_type& y) {
-		return is_small(x, y) ? x : y;
-	}
-	static constexpr value_type I() { return {INF, -1}; }
-	static constexpr bool COMMUTATIVE = true;
-};
-
-} // namespace monoid
-// ===== END INCLUDE: ../../monoid/minidx.hpp =====
-// ===== BEGIN INCLUDE: ../../segment-tree/segment-tree.hpp =====
-#include <algorithm>
-#include <cassert>
-#include <vector>
-
-template <typename Monoid>
-struct SegmentTree {
-	using X = typename Monoid::value_type;
-	std::vector<X> dat;
-	int N, LOG, size;
-
-	SegmentTree() {}
-	SegmentTree(int N) { build(N); }
-	template <typename F>
-	SegmentTree(int N, F init) { build(N, init); }
-	template <std::ranges::input_range R>
-	SegmentTree(const R& v) { build(v); }
-
-	void build(int m) {
-		build(m, [](int i) -> X { return Monoid::I(); });
-	}
-	template <std::ranges::input_range R>
-	void build(const R& v) {
-		build(v.size(), [&](int i) -> X { return v[i]; });
-	}
-	template <typename F>
-	void build(int m, F init) {
-		N = m, LOG = 1;
-		while ((1 << LOG) < N) ++LOG;
-		size = 1 << LOG;
-		dat.assign(size << 1, Monoid::I());
-		for (int i = 0; i < N; i++) dat[size + i] = init(i);
-		for (int i = size - 1; i >= 1; i--) update(i);
-	}
-
-	X get(int i) const { return dat[size + i]; }
-	std::vector<X> get() const { return {dat.begin() + size, dat.begin() + size + N}; }
-
-	void update(int i) { dat[i] = Monoid::O(dat[2 * i], dat[2 * i + 1]); }
-	void set(int i, const X x) {
-		assert(i < N);
-		dat[i += size] = x;
-		while (i >>= 1) update(i);
-	}
-
-	void multiply(int i, const X x) {
-		assert(i < N);
-		i += size;
-		dat[i] = Monoid::O(dat[i], x);
-		while (i >>= 1) update(i);
-	}
-
-	X prod(int L, int R) const {
-		assert(0 <= L && L <= R && R <= N);
-		X vl = Monoid::I(), vr = Monoid::I();
-		L += size, R += size;
-		while (L < R) {
-			if (L & 1) vl = Monoid::O(vl, dat[L++]);
-			if (R & 1) vr = Monoid::O(dat[--R], vr);
-			L >>= 1, R >>= 1;
-		}
-		return Monoid::O(vl, vr);
-	}
-
-	std::vector<int> prod_ids(int L, int R) const {
-		assert(0 <= L && L <= R && R <= N);
-		std::vector<int> I, J;
-		L += size, R += size;
-		while (L < R) {
-			if (L & 1) I.emplace_back(L++);
-			if (R & 1) J.emplace_back(--R);
-			L >>= 1, R >>= 1;
-		}
-		std::ranges::reverse(J);
-		I.resize(I.size() + J.size());
-		for (int j = 0; j < (int)J.size(); j++) I[(int)I.size() - (int)J.size() + j] = J[j];
-		return I;
-	}
-
-	X prod() const { return dat[1]; }
-	template <typename... Args>
-	X operator()(Args... args) { return prod(args...); }
-	template <typename... Args>
-	X operator[](Args... args) { return get(args...); }
-
-	template <typename F>
-	int max_right(int L, F check) const {
-		assert(0 <= L && L <= N && check(Monoid::I()));
-		if (L == N) return N;
-		L += size;
-		X sm = Monoid::I();
-		do {
-			while (L % 2 == 0) L >>= 1;
-			if (!check(Monoid::O(sm, dat[L]))) {
-				while (L < size) {
-					L = 2 * L;
-					if (check(Monoid::O(sm, dat[L]))) {
-						sm = Monoid::O(sm, dat[L++]);
-					}
-				}
-				return L - size;
-			}
-			sm = Monoid::O(sm, dat[L++]);
-		} while ((L & -L) != L);
-		return N;
-	}
-
-	template <typename F>
-	int min_left(int R, F check) const {
-		assert(0 <= R && R <= N && check(Monoid::I()));
-		if (R == 0) return 0;
-		R += size;
-		X sm = Monoid::I();
-		do {
-			--R;
-			while (R > 1 && (R % 2)) R >>= 1;
-			if (!check(Monoid::O(dat[R], sm))) {
-				while (R < size) {
-					R = 2 * R + 1;
-					if (check(Monoid::O(dat[R], sm))) {
-						sm = Monoid::O(dat[R--], sm);
-					}
-				}
-				return R + 1 - size;
-			}
-			sm = Monoid::O(dat[R], sm);
-		} while ((R & -R) != R);
-		return 0;
-	}
-
-	// prod_{l<=i<r} A[i xor x]
-	X xor_prod(int l, int r, int xor_val) const {
-		static_assert(Monoid::COMMUTATIVE);
-		X x = Monoid::I();
-		for (int k = 0; k < LOG + 1; ++k) {
-			if (l >= r) break;
-			if (l & 1) {
-				x = Monoid::O(x, dat[(size >> k) + ((l++) ^ xor_val)]);
-			}
-			if (r & 1) {
-				x = Monoid::O(x, dat[(size >> k) + ((--r) ^ xor_val)]);
-			}
-			l /= 2, r /= 2, xor_val /= 2;
-		}
-		return x;
-	}
-};
-// ===== END INCLUDE: ../../segment-tree/segment-tree.hpp =====
 // ===== BEGIN INCLUDE: ../../template/template.hpp =====
 
 #include <bits/stdc++.h>
@@ -369,11 +197,11 @@ T bisect(T ok, T ng, F f) { // ok < ng でも ok > ng でも可能 // f(ok) && !
 }
 
 template <typename T, typename F>
-T bisect(F f) { // 思考停止用 // 判定回数は上限を決め打ちした場合の高々２倍程度
+T bisect(F f) { // 判定回数は上限を決め打ちした場合の高々２倍程度 // f(0) && !f(inf) が必要
 	T ok = 0, ng = 1;
 	while (f(ng)) ng *= 2;
 	while (ng - ok > 1) { T mid = ok + (ng - ok) / 2; (f(mid) ? ok : ng) = mid; } 
-	return ok;
+	return ng;
 }
 
 template <typename T, typename F>
@@ -857,10 +685,41 @@ void solve();
 }
 int main() { yamada::solve(); }
 // ===== END INCLUDE: ../../template/template.hpp =====
- 
+using namespace yamada;
+
+ll F(vint A){
+	ll ans=0;
+	each(i,a,A|Enumerate)ans|=i&a;
+	return ans;
+}
+
+map<pl,vint> memo;
+vint cal(ll N,ll K){
+	if(memo.count(mkp(N,K)))return memo[mkp(N,K)];
+	if(N==1){
+		return memo[mkp(N,K)]={0};
+	}
+	ll T=msb(N-1);
+	ll n=N-(1<<T);
+	auto ans=cal(1<<T,K);
+	auto bns=cal(n,K);
+	each(b,bns)b|=1<<T;
+	if(K>>T&1){
+		each(b,bns)ans.eb(b);
+		return memo[mkp(N,K)]=ans;
+	}
+	else{
+		each(a,ans|Drop(n))bns.eb(a);
+		each(a,ans|Take(n))bns.eb(a);
+		return memo[mkp(N,K)]=bns;
+	}
+}
+
 void yamada::solve()
 {
-	IN(N,A=PR(LL,IDX)*N);
-	SegmentTree<MONOID::MinIdx<ll>> seg(A);
-	out(seg().se+1);
+	IN(N,K);
+	if(!YesNo(msb(N-1)>=msb(K)))return;
+	fout(mkiota(N));
+	fout(cal(N,K));
+	assert(F(cal(N,K))==K);
 }
