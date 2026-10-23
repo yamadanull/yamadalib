@@ -3,13 +3,14 @@
 
 void yamada::solve()
 {
-	ll N=randint(1,6);
-	vp xy(N);
-	FOR_E(x,y,xy){
-		x=randint(0,5);
-		y=randint(0,5);
-	}
+	ll T=3;
+	out(T);
+	while(T--){
+		ll N=randint(1,20);
+		vl A(N);
+		each(a,A)a=randint(1,10);
 
-	OUT(N);
-	FOR_E(x,y,xy)OUT(x,y);
+		out(N);
+		out(A);
+	}
 }

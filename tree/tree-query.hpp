@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../graph/graph-template.hpp"
+#include <vector>
 #include <ranges>
 
 template <typename G>
