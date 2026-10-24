@@ -1,10 +1,9 @@
 /**
- * date    : 2026-10-24 14:07:39
+ * date    : 2026-10-25 02:54:19
  * author  : yamadanull
  * library : https://github.com/yamadanull/yamadalib/
  */
 
-/* #include <cassert> */
 // ===== BEGIN INCLUDE: ../../template/template.hpp =====
 
 #include <bits/stdc++.h>
@@ -688,582 +687,741 @@ void solve();
 }
 int main() { yamada::solve(); }
 // ===== END INCLUDE: ../../template/template.hpp =====
-// ===== BEGIN INCLUDE: ../../segment-tree/lazy-segment-tree-utility.hpp =====
+// ===== BEGIN INCLUDE: ../../fps/ntt-friendly-fps.hpp =====
 
-// ===== BEGIN INCLUDE: ../monoid/add-max.hpp =====
+// ===== BEGIN INCLUDE: ../ntt/ntt.hpp =====
 
-// ===== BEGIN INCLUDE: add.hpp =====
-
-namespace MONOID {
-
-template <typename E>
-struct Add {
-	using value_type = E;
-	static constexpr value_type O(const value_type& x, const value_type& y) noexcept { return x + y; }
-	static constexpr value_type inverse(const value_type &x) noexcept { return -x; }
-	static constexpr value_type power(const value_type& x, long long n) noexcept { return value_type(n) * x; }
-	static constexpr value_type I() { return value_type(0); }
-	static constexpr bool COMMUTATIVE = true;
-};
-
-} // namespace monoid
-// ===== END INCLUDE: add.hpp =====
-// ===== BEGIN INCLUDE: max.hpp =====
-
-#include <algorithm>
-#include <limits>
-
-namespace MONOID {
-
-template <typename E, E MNF = std::numeric_limits<E>::min()>
-struct Max {
-	using value_type = E;
-	static constexpr value_type O(const value_type& x, const value_type& y) { return std::max(x, y); }
-	static constexpr value_type I() { return MNF; }
-	static constexpr bool COMMUTATIVE = true;
-};
-
-} // namespace monoid
-// ===== END INCLUDE: max.hpp =====
-
-namespace ACTED_MONOID {
-
-template <typename E, E MNF = std::numeric_limits<E>::min()>
-struct Add_Max {
-	using Monoid_X = MONOID::Max<E, MNF>;
-	using Monoid_A = MONOID::Add<E>;
-	using X = typename Monoid_X::value_type; // E
-	using A = typename Monoid_A::value_type; // E
-	static constexpr X O(const X& x, const A& a, const long long) {
-		return x == MNF ? x : x + a;
-	}
-};
-
-} // namespace ACTED_MONOID
-
-// ===== END INCLUDE: ../monoid/add-max.hpp =====
-// ===== BEGIN INCLUDE: ../monoid/add-min.hpp =====
-
-// ===== BEGIN INCLUDE: min.hpp =====
-
-#include <algorithm>
-#include <limits>
-
-namespace MONOID {
-
-template <typename E, E INF = std::numeric_limits<E>::max()>
-struct Min {
-	using value_type = E;
-	static constexpr value_type O(const value_type& x, const value_type& y) { return std::min(x, y); }
-	static constexpr value_type I() { return INF; }
-	static constexpr bool COMMUTATIVE = true;
-};
-
-} // namespace monoid
-// ===== END INCLUDE: min.hpp =====
-
-namespace ACTED_MONOID {
-
-template <typename E, E INF = std::numeric_limits<E>::max()>
-struct Add_Min {
-	using Monoid_X = MONOID::Min<E, INF>;
-	using Monoid_A = MONOID::Add<E>;
-	using X = typename Monoid_X::value_type; // E
-	using A = typename Monoid_A::value_type; // E
-	static constexpr X O(const X& x, const A& a, const long long) { return x + a; }
-};
-
-} // namespace ACTED_MONOID
-
-// ===== END INCLUDE: ../monoid/add-min.hpp =====
-// ===== BEGIN INCLUDE: ../monoid/add-sum.hpp =====
-
-
-namespace ACTED_MONOID {
-
-template <typename E>
-struct Add_Sum {
-	using Monoid_X = MONOID::Add<E>;
-	using Monoid_A = MONOID::Add<E>;
-	using X = typename Monoid_X::value_type; // E
-	using A = typename Monoid_A::value_type; // E
-	static constexpr X O(const X& x, const A& a, const long long &size) {
-		return x + a * E(size);
-	}
-};
-
-} // namespace ACTED_MONOID
-
-// ===== END INCLUDE: ../monoid/add-sum.hpp =====
-// ===== BEGIN INCLUDE: ../monoid/update-max.hpp =====
-
-// ===== BEGIN INCLUDE: update.hpp =====
-
-#include <optional>
-
-namespace MONOID {
-
-template <typename T>
-struct Update {
-	using value_type = std::optional<T>;
-	static constexpr value_type O(const value_type& x, const value_type& y) { return y.has_value() ? y : x; }
-	static constexpr value_type I() { return std::nullopt; }
-	static constexpr bool COMMUTATIVE = false;
-};
-
-} // namespace monoid
-// ===== END INCLUDE: update.hpp =====
-
-namespace ACTED_MONOID {
-
-template <typename E, E MNF = std::numeric_limits<E>::min()>
-struct Update_Max {
-	using Monoid_X = MONOID::Max<E, MNF>;
-	using Monoid_A = MONOID::Update<E>;
-	using X = typename Monoid_X::value_type; // E
-	using A = typename Monoid_A::value_type; // optional<E>
-	static constexpr X O(const X& x, A& a, const long long) {
-		return a.has_value() ? a.value() : x;
-	}
-};
-
-} // namespace ACTED_MONOID
-
-// ===== END INCLUDE: ../monoid/update-max.hpp =====
-// ===== BEGIN INCLUDE: ../monoid/update-min.hpp =====
-
-
-namespace ACTED_MONOID {
-
-template <typename E, E INF = std::numeric_limits<E>::max()>
-struct Update_Min {
-	using Monoid_X = MONOID::Min<E, INF>;
-	using Monoid_A = MONOID::Update<E>;
-	using X = typename Monoid_X::value_type; // E
-	using A = typename Monoid_A::value_type; // optional<E>
-	static constexpr X O(const X& x, const A& a, const long long) {
-		return a.has_value() ? a : x;
-	}
-};
-
-} // namespace ACTED_MONOID
-
-// ===== END INCLUDE: ../monoid/update-min.hpp =====
-// ===== BEGIN INCLUDE: ../monoid/update-sum.hpp =====
-
-
-namespace ACTED_MONOID {
-
-template <typename E>
-struct Update_Sum {
-	using Monoid_X = MONOID::Add<E>;
-	using Monoid_A = MONOID::Update<E>;
-	using X = typename Monoid_X::value_type; // E
-	using A = typename Monoid_A::value_type; // optional<E>
-	static constexpr X O(const X& x, const A& a, const long long &size) {
-		return a.has_value() ? a.value() * E(size) : x;
-	}
-};
-
-} // namespace ACTED_MONOID
-
-// ===== END INCLUDE: ../monoid/update-sum.hpp =====
-// ===== BEGIN INCLUDE: segment-tree.hpp =====
-#include <algorithm>
-#include <cassert>
 #include <vector>
 
-template <typename Monoid>
-struct SegmentTree {
-	using X = typename Monoid::value_type;
-	std::vector<X> dat;
-	int N, LOG, size;
-
-	SegmentTree() {}
-	SegmentTree(int N) { build(N); }
-	template <typename F>
-	SegmentTree(int N, F init) { build(N, init); }
-	template <std::ranges::input_range R>
-	SegmentTree(const R& v) { build(v); }
-
-	void build(int m) {
-		build(m, [](int i) -> X { return Monoid::I(); });
-	}
-	template <std::ranges::input_range R>
-	void build(const R& v) {
-		build(v.size(), [&](int i) -> X { return v[i]; });
-	}
-	template <typename F>
-	void build(int m, F init) {
-		N = m, LOG = 1;
-		while ((1 << LOG) < N) ++LOG;
-		size = 1 << LOG;
-		dat.assign(size << 1, Monoid::I());
-		for (int i = 0; i < N; i++) dat[size + i] = init(i);
-		for (int i = size - 1; i >= 1; i--) update(i);
-	}
-
-	X get(int i) const { return dat[size + i]; }
-	std::vector<X> get() const { return {dat.begin() + size, dat.begin() + size + N}; }
-
-	void update(int i) { dat[i] = Monoid::O(dat[2 * i], dat[2 * i + 1]); }
-	void set(int i, const X x) {
-		assert(i < N);
-		dat[i += size] = x;
-		while (i >>= 1) update(i);
-	}
-
-	void multiply(int i, const X x) {
-		assert(i < N);
-		i += size;
-		dat[i] = Monoid::O(dat[i], x);
-		while (i >>= 1) update(i);
-	}
-
-	X prod(int L, int R) const {
-		assert(0 <= L && L <= R && R <= N);
-		X vl = Monoid::I(), vr = Monoid::I();
-		L += size, R += size;
-		while (L < R) {
-			if (L & 1) vl = Monoid::O(vl, dat[L++]);
-			if (R & 1) vr = Monoid::O(dat[--R], vr);
-			L >>= 1, R >>= 1;
+template <typename mint>
+struct NTT {
+	static constexpr uint32_t get_pr() {
+		uint32_t _mod = mint::get_mod();
+		using u64 = uint64_t;
+		u64 ds[32] = {};
+		int idx = 0;
+		u64 m = _mod - 1;
+		for (u64 i = 2; i * i <= m; ++i) {
+			if (m % i == 0) {
+				ds[idx++] = i;
+				while (m % i == 0) m /= i;
+			}
 		}
-		return Monoid::O(vl, vr);
-	}
+		if (m != 1) ds[idx++] = m;
 
-	std::vector<int> prod_ids(int L, int R) const {
-		assert(0 <= L && L <= R && R <= N);
-		std::vector<int> I, J;
-		L += size, R += size;
-		while (L < R) {
-			if (L & 1) I.emplace_back(L++);
-			if (R & 1) J.emplace_back(--R);
-			L >>= 1, R >>= 1;
-		}
-		std::ranges::reverse(J);
-		I.resize(I.size() + J.size());
-		for (int j = 0; j < (int)J.size(); j++) I[(int)I.size() - (int)J.size() + j] = J[j];
-		return I;
-	}
-
-	X prod() const { return dat[1]; }
-	template <typename... Args>
-	X operator()(Args... args) { return prod(args...); }
-	template <typename... Args>
-	X operator[](Args... args) { return get(args...); }
-
-	template <typename F>
-	int max_right(int L, F check) const {
-		assert(0 <= L && L <= N && check(Monoid::I()));
-		if (L == N) return N;
-		L += size;
-		X sm = Monoid::I();
-		do {
-			while (L % 2 == 0) L >>= 1;
-			if (!check(Monoid::O(sm, dat[L]))) {
-				while (L < size) {
-					L = 2 * L;
-					if (check(Monoid::O(sm, dat[L]))) {
-						sm = Monoid::O(sm, dat[L++]);
-					}
+		uint32_t _pr = 2;
+		while (1) {
+			int flg = 1;
+			for (int i = 0; i < idx; ++i) {
+				u64 a = _pr, b = (_mod - 1) / ds[i], r = 1;
+				while (b) {
+					if (b & 1) r = r * a % _mod;
+					a = a * a % _mod;
+					b >>= 1;
 				}
-				return L - size;
-			}
-			sm = Monoid::O(sm, dat[L++]);
-		} while ((L & -L) != L);
-		return N;
-	}
-
-	template <typename F>
-	int min_left(int R, F check) const {
-		assert(0 <= R && R <= N && check(Monoid::I()));
-		if (R == 0) return 0;
-		R += size;
-		X sm = Monoid::I();
-		do {
-			--R;
-			while (R > 1 && (R % 2)) R >>= 1;
-			if (!check(Monoid::O(dat[R], sm))) {
-				while (R < size) {
-					R = 2 * R + 1;
-					if (check(Monoid::O(dat[R], sm))) {
-						sm = Monoid::O(dat[R--], sm);
-					}
+				if (r == 1) {
+					flg = 0;
+					break;
 				}
-				return R + 1 - size;
 			}
-			sm = Monoid::O(dat[R], sm);
-		} while ((R & -R) != R);
-		return 0;
+			if (flg == 1) break;
+			++_pr;
+		}
+		return _pr;
+	};
+
+	static constexpr uint32_t mod = mint::get_mod();
+	static constexpr uint32_t pr = get_pr();
+	static constexpr int level = __builtin_ctzll(mod - 1);
+	mint dw[level], dy[level];
+
+	void setwy(int k) {
+		mint w[level], y[level];
+		w[k - 1] = mint(pr).pow((mod - 1) / (1 << k));
+		y[k - 1] = w[k - 1].inverse();
+		for (int i = k - 2; i > 0; --i)
+			w[i] = w[i + 1] * w[i + 1], y[i] = y[i + 1] * y[i + 1];
+		dw[1] = w[1], dy[1] = y[1], dw[2] = w[2], dy[2] = y[2];
+		for (int i = 3; i < k; ++i) {
+			dw[i] = dw[i - 1] * y[i - 2] * w[i];
+			dy[i] = dy[i - 1] * w[i - 2] * y[i];
+		}
 	}
 
-	// prod_{l<=i<r} A[i xor x]
-	X xor_prod(int l, int r, int xor_val) const {
-		static_assert(Monoid::COMMUTATIVE);
-		X x = Monoid::I();
-		for (int k = 0; k < LOG + 1; ++k) {
-			if (l >= r) break;
-			if (l & 1) {
-				x = Monoid::O(x, dat[(size >> k) + ((l++) ^ xor_val)]);
-			}
-			if (r & 1) {
-				x = Monoid::O(x, dat[(size >> k) + ((--r) ^ xor_val)]);
-			}
-			l /= 2, r /= 2, xor_val /= 2;
+	NTT() { setwy(level); }
+
+	void fft4(std::vector<mint> &a, int k) {
+		if ((int)a.size() <= 1) return;
+		if (k == 1) {
+			mint a1 = a[1];
+			a[1] = a[0] - a[1];
+			a[0] = a[0] + a1;
+			return;
 		}
-		return x;
+		if (k & 1) {
+			int v = 1 << (k - 1);
+			for (int j = 0; j < v; ++j) {
+				mint ajv = a[j + v];
+				a[j + v] = a[j] - ajv;
+				a[j] += ajv;
+			}
+		}
+		int u = 1 << (2 + (k & 1));
+		int v = 1 << (k - 2 - (k & 1));
+		mint one = mint(1);
+		mint imag = dw[1];
+		while (v) {
+			// jh = 0
+			{
+				int j0 = 0;
+				int j1 = v;
+				int j2 = j1 + v;
+				int j3 = j2 + v;
+				for (; j0 < v; ++j0, ++j1, ++j2, ++j3) {
+					mint t0 = a[j0], t1 = a[j1], t2 = a[j2], t3 = a[j3];
+					mint t0p2 = t0 + t2, t1p3 = t1 + t3;
+					mint t0m2 = t0 - t2, t1m3 = (t1 - t3) * imag;
+					a[j0] = t0p2 + t1p3, a[j1] = t0p2 - t1p3;
+					a[j2] = t0m2 + t1m3, a[j3] = t0m2 - t1m3;
+				}
+			}
+			// jh >= 1
+			mint ww = one, xx = one * dw[2], wx = one;
+			for (int jh = 4; jh < u;) {
+				ww = xx * xx, wx = ww * xx;
+				int j0 = jh * v;
+				int je = j0 + v;
+				int j2 = je + v;
+				for (; j0 < je; ++j0, ++j2) {
+					mint t0 = a[j0], t1 = a[j0 + v] * xx, t2 = a[j2] * ww, t3 = a[j2 + v] * wx;
+					mint t0p2 = t0 + t2, t1p3 = t1 + t3;
+					mint t0m2 = t0 - t2, t1m3 = (t1 - t3) * imag;
+					a[j0] = t0p2 + t1p3, a[j0 + v] = t0p2 - t1p3;
+					a[j2] = t0m2 + t1m3, a[j2 + v] = t0m2 - t1m3;
+				}
+				xx *= dw[__builtin_ctzll((jh += 4))];
+			}
+			u <<= 2;
+			v >>= 2;
+		}
+	}
+
+	void ifft4(std::vector<mint> &a, int k) {
+		if ((int)a.size() <= 1) return;
+		if (k == 1) {
+			mint a1 = a[1];
+			a[1] = a[0] - a[1];
+			a[0] = a[0] + a1;
+			return;
+		}
+		int u = 1 << (k - 2);
+		int v = 1;
+		mint one = mint(1);
+		mint imag = dy[1];
+		while (u) {
+			// jh = 0
+			{
+				int j0 = 0;
+				int j1 = v;
+				int j2 = v + v;
+				int j3 = j2 + v;
+				for (; j0 < v; ++j0, ++j1, ++j2, ++j3) {
+					mint t0 = a[j0], t1 = a[j1], t2 = a[j2], t3 = a[j3];
+					mint t0p1 = t0 + t1, t2p3 = t2 + t3;
+					mint t0m1 = t0 - t1, t2m3 = (t2 - t3) * imag;
+					a[j0] = t0p1 + t2p3, a[j2] = t0p1 - t2p3;
+					a[j1] = t0m1 + t2m3, a[j3] = t0m1 - t2m3;
+				}
+			}
+			// jh >= 1
+			mint ww = one, xx = one * dy[2], yy = one;
+			u <<= 2;
+			for (int jh = 4; jh < u;) {
+				ww = xx * xx, yy = xx * imag;
+				int j0 = jh * v;
+				int je = j0 + v;
+				int j2 = je + v;
+				for (; j0 < je; ++j0, ++j2) {
+					mint t0 = a[j0], t1 = a[j0 + v], t2 = a[j2], t3 = a[j2 + v];
+					mint t0p1 = t0 + t1, t2p3 = t2 + t3;
+					mint t0m1 = (t0 - t1) * xx, t2m3 = (t2 - t3) * yy;
+					a[j0] = t0p1 + t2p3, a[j2] = (t0p1 - t2p3) * ww;
+					a[j0 + v] = t0m1 + t2m3, a[j2 + v] = (t0m1 - t2m3) * ww;
+				}
+				xx *= dy[__builtin_ctzll(jh += 4)];
+			}
+			u >>= 4;
+			v <<= 2;
+		}
+		if (k & 1) {
+			u = 1 << (k - 1);
+			for (int j = 0; j < u; ++j) {
+				mint ajv = a[j] - a[j + u];
+				a[j] += a[j + u];
+				a[j + u] = ajv;
+			}
+		}
+	}
+
+	void ntt(std::vector<mint> &a) {
+		if ((int)a.size() <= 1) return;
+		fft4(a, __builtin_ctz(a.size()));
+	}
+
+	void intt(std::vector<mint> &a) {
+		if ((int)a.size() <= 1) return;
+		ifft4(a, __builtin_ctz(a.size()));
+		mint iv = mint(a.size()).inverse();
+		for (auto &x : a) x *= iv;
+	}
+
+	std::vector<mint> multiply(const std::vector<mint> &a, const std::vector<mint> &b) {
+		int l = a.size() + b.size() - 1;
+		if (std::min<int>(a.size(), b.size()) <= 40) {
+			std::vector<mint> s(l);
+			for (int i = 0; i < (int)a.size(); ++i)
+				for (int j = 0; j < (int)b.size(); ++j) s[i + j] += a[i] * b[j];
+			return s;
+		}
+		int k = 2, M = 4;
+		while (M < l) M <<= 1, ++k;
+		setwy(k);
+		std::vector<mint> s(M);
+		for (int i = 0; i < (int)a.size(); ++i) s[i] = a[i];
+		fft4(s, k);
+		if (a.size() == b.size() && a == b) {
+			for (int i = 0; i < M; ++i) s[i] *= s[i];
+		} else {
+			std::vector<mint> t(M);
+			for (int i = 0; i < (int)b.size(); ++i) t[i] = b[i];
+			fft4(t, k);
+			for (int i = 0; i < M; ++i) s[i] *= t[i];
+		}
+		ifft4(s, k);
+		s.resize(l);
+		mint invm = mint(M).inverse();
+		for (int i = 0; i < l; ++i) s[i] *= invm;
+		return s;
+	}
+
+	void ntt_doubling(std::vector<mint> &a) {
+		int M = (int)a.size();
+		auto b = a;
+		intt(b);
+		mint r = mint(1), zeta = mint(pr).pow((mint::get_mod() - 1) / (M << 1));
+		for (int i = 0; i < M; i++) b[i] *= r, r *= zeta;
+		ntt(b);
+		std::copy(begin(b), end(b), back_inserter(a));
 	}
 };
-// ===== END INCLUDE: segment-tree.hpp =====
-// ===== BEGIN INCLUDE: lazy-segment-tree.hpp =====
-#include <vector>
-#include <cassert>
+// ===== END INCLUDE: ../ntt/ntt.hpp =====
+// ===== BEGIN INCLUDE: ./formal-power-series.hpp =====
 
-template <typename ActedMonoid>
-struct LazySegmentTree {
-	using MX = typename ActedMonoid::Monoid_X;
-	using MA = typename ActedMonoid::Monoid_A;
-	using X = typename MX::value_type;
-	using A = typename MA::value_type;
-	int N, LOG, size;
-	std::vector<X> dat;
-	std::vector<A> laz;
-	std::vector<bool> has_laz;
+template <typename mint>
+struct FormalPowerSeries : std::vector<mint> {
+	using std::vector<mint>::vector;
+	using FPS = FormalPowerSeries;
 
-	LazySegmentTree() {}
-	LazySegmentTree(int N) { build(N); }
-	template <typename F>
-	LazySegmentTree(int N, F init) { build(N, init); }
-	template <std::ranges::input_range R>
-	LazySegmentTree(const R& v) { build(v); }
-
-	void build(int m) {
-		build(m, [](int i) -> X { return MX::I(); });
-	}
-	template <std::ranges::input_range R>
-	void build(const R& v) {
-		build(v.size(), [&](int i) -> X { return v[i]; });
-	}
-	template <typename F>
-	void build(int m, F init) {
-		N = m, LOG = 1;
-		while ((1 << LOG) < N) ++LOG;
-		size = 1 << LOG;
-		dat.assign(size << 1, MX::I());
-		laz.assign(size, MA::I());
-		has_laz.assign(size, false);
-		for (int i = 0; i < N; i++) dat[size + i] = init(i);
-		for (int i = size - 1; i >= 1; i--) update(i);
+	FPS &operator+=(const FPS &r) {
+		if (r.size() > this->size()) this->resize(r.size());
+		for (int i = 0; i < (int)r.size(); i++) (*this)[i] += r[i];
+		return *this;
 	}
 
-	void update(int k) { dat[k] = MX::O(dat[2 * k], dat[2 * k + 1]); }
-	void set(int p, X x) {
-		assert(0 <= p && p < N);
-		p += size;
-		for (int i = LOG; i >= 1; i--) push(p >> i);
-		dat[p] = x;
-		for (int i = 1; i <= LOG; i++) update(p >> i);
-	}
-	void multiply(int p, const X& x) {
-		assert(0 <= p && p < N);
-		p += size;
-		for (int i = LOG; i >= 1; i--) push(p >> i);
-		dat[p] = MX::O(dat[p], x);
-		for (int i = 1; i <= LOG; i++) update(p >> i);
+	FPS &operator+=(const mint &r) {
+		if (this->empty()) this->resize(1);
+		(*this)[0] += r;
+		return *this;
 	}
 
-	X get(int p) {
-		assert(0 <= p && p < N);
-		p += size;
-		for (int i = LOG; i >= 1; i--) push(p >> i);
-		return dat[p];
+	FPS &operator-=(const FPS &r) {
+		if (r.size() > this->size()) this->resize(r.size());
+		for (int i = 0; i < (int)r.size(); i++) (*this)[i] -= r[i];
+		return *this;
 	}
 
-	std::vector<X> get() {
-		for (int k = 0; k < size; k++) push(k);
-		return {dat.begin() + size, dat.begin() + size + N};
+	FPS &operator-=(const mint &r) {
+		if (this->empty()) this->resize(1);
+		(*this)[0] -= r;
+		return *this;
 	}
 
-	X prod(int l, int r) {
-		assert(0 <= l && l <= r && r <= N);
-		if (l == r) return MX::I();
-		l += size, r += size;
-		for (int i = LOG; i >= 1; i--) {
-			if (((l >> i) << i) != l) push(l >> i);
-			if (((r >> i) << i) != r) push((r - 1) >> i);
+	FPS &operator*=(const mint &v) {
+		for (int k = 0; k < (int)this->size(); k++) (*this)[k] *= v;
+		return *this;
+	}
+
+	FPS &operator/=(const FPS &r) {
+		if (this->size() < r.size()) {
+			this->clear();
+			return *this;
 		}
-		X xl = MX::I(), xr = MX::I();
-		while (l < r) {
-			if (l & 1) xl = MX::O(xl, dat[l++]);
-			if (r & 1) xr = MX::O(dat[--r], xr);
-			l >>= 1, r >>= 1;
-		}
-		return MX::O(xl, xr);
-	}
-
-	X prod() { return dat[1]; }
-	template <typename... Args>
-	X operator()(Args... args) { return prod(args...); }
-	template <typename... Args>
-	X operator[](Args... args) { return get(args...); }
-
-	void apply(int l, int r, A a) {
-		assert(0 <= l && l <= r && r <= N);
-		if (l == r) return;
-		l += size, r += size;
-		for (int i = LOG; i >= 1; i--) {
-			if (((l >> i) << i) != l) push(l >> i);
-			if (((r >> i) << i) != r) push((r - 1) >> i);
-		}
-		int l2 = l, r2 = r;
-		while (l < r) {
-			if (l & 1) apply_at(l++, a);
-			if (r & 1) apply_at(--r, a);
-			l >>= 1, r >>= 1;
-		}
-		l = l2, r = r2;
-		for (int i = 1; i <= LOG; i++) {
-			if (((l >> i) << i) != l) update(l >> i);
-			if (((r >> i) << i) != r) update((r - 1) >> i);
-		}
-	}
-
-	template <typename F>
-	int max_right(int l, const F check) {
-		assert(0 <= l && l <= N);
-		assert(check(MX::I()));
-		if (l == N) return N;
-		l += size;
-		for (int i = LOG; i >= 1; i--) push(l >> i);
-		X sm = MX::I();
-		do {
-			while (l % 2 == 0) l >>= 1;
-			if (!check(MX::O(sm, dat[l]))) {
-				while (l < size) {
-					push(l);
-					l = (2 * l);
-					if (check(MX::O(sm, dat[l]))) {
-						sm = MX::O(sm, dat[l++]);
-					}
-				}
-				return l - size;
+		int n = this->size() - r.size() + 1;
+		if ((int)r.size() <= 64) {
+			FPS f(*this), g(r);
+			g.shrink();
+			mint coeff = g.back().inverse();
+			for (auto &x : g) x *= coeff;
+			int deg = (int)f.size() - (int)g.size() + 1;
+			int gs = g.size();
+			FPS quo(deg);
+			for (int i = deg - 1; i >= 0; i--) {
+				quo[i] = f[i + gs - 1];
+				for (int j = 0; j < gs; j++) f[i + j] -= quo[i] * g[j];
 			}
-			sm = MX::O(sm, dat[l++]);
-		} while ((l & -l) != l);
-		return N;
+			*this = quo * coeff;
+			this->resize(n, mint(0));
+			return *this;
+		}
+		return *this = ((*this).rev().pre(n) * r.rev().inv(n)).pre(n).rev();
 	}
 
-	template <typename F>
-	int min_left(int r, const F check) {
-		assert(0 <= r && r <= N);
-		assert(check(MX::I()));
-		if (r == 0) return 0;
-		r += size;
-		for (int i = LOG; i >= 1; i--) push((r - 1) >> i);
-		X sm = MX::I();
-		do {
-			r--;
-			while (r > 1 && (r % 2)) r >>= 1;
-			if (!check(MX::O(dat[r], sm))) {
-				while (r < size) {
-					push(r);
-					r = (2 * r + 1);
-					if (check(MX::O(dat[r], sm))) {
-						sm = MX::O(dat[r--], sm);
-					}
-				}
-				return r + 1 - size;
+	FPS &operator/=(const mint &v) {
+		for (int k = 0; k < (int)this->size(); k++) (*this)[k] /= v;
+		return *this;
+	}
+
+	FPS &operator%=(const FPS &r) {
+		*this -= *this / r * r;
+		shrink();
+		return *this;
+	}
+
+	FPS operator+(const FPS &r) const { return FPS(*this) += r; }
+	FPS operator+(const mint &v) const { return FPS(*this) += v; }
+	FPS operator-(const FPS &r) const { return FPS(*this) -= r; }
+	FPS operator-(const mint &v) const { return FPS(*this) -= v; }
+	FPS operator*(const FPS &r) const { return FPS(*this) *= r; }
+	FPS operator*(const mint &v) const { return FPS(*this) *= v; }
+	FPS operator/(const FPS &r) const { return FPS(*this) /= r; }
+	FPS operator/(const mint &v) const { return FPS(*this) /= v; }
+	FPS operator%(const FPS &r) const { return FPS(*this) %= r; }
+	FPS operator-() const {
+		FPS ret(this->size());
+		for (int i = 0; i < (int)this->size(); i++) ret[i] = -(*this)[i];
+		return ret;
+	}
+
+	void shrink() {
+		while (this->size() && this->back() == mint(0)) this->pop_back();
+	}
+
+	FPS rev() const {
+		FPS ret(*this);
+		reverse(begin(ret), end(ret));
+		return ret;
+	}
+
+	FPS dot(FPS r) const {
+		FPS ret(std::min(this->size(), r.size()));
+		for (int i = 0; i < (int)ret.size(); i++) ret[i] = (*this)[i] * r[i];
+		return ret;
+	}
+
+	// 前 sz 項を取ってくる。sz に足りない項は 0 埋めする
+	FPS pre(int sz) const {
+		FPS ret(begin(*this), begin(*this) + std::min((int)this->size(), sz));
+		if ((int)ret.size() < sz) ret.resize(sz);
+		return ret;
+	}
+
+	FPS operator>>(int sz) const {
+		if ((int)this->size() <= sz) return {};
+		FPS ret(*this);
+		ret.erase(ret.begin(), ret.begin() + sz);
+		return ret;
+	}
+
+	FPS operator<<(int sz) const {
+		FPS ret(*this);
+		ret.insert(ret.begin(), sz, mint(0));
+		return ret;
+	}
+
+	FPS diff() const {
+		const int n = (int)this->size();
+		FPS ret(max(0, n - 1));
+		mint one(1), coeff(1);
+		for (int i = 1; i < n; i++) {
+			ret[i - 1] = (*this)[i] * coeff;
+			coeff += one;
+		}
+		return ret;
+	}
+
+	FPS integral() const {
+		const int n = (int)this->size();
+		FPS ret(n + 1);
+		ret[0] = mint(0);
+		if (n > 0) ret[1] = mint(1);
+		auto mod = mint::get_mod();
+		for (int i = 2; i <= n; i++) ret[i] = (-ret[mod % i]) * (mod / i);
+		for (int i = 0; i < n; i++) ret[i + 1] *= (*this)[i];
+		return ret;
+	}
+
+	mint eval(mint x) const {
+		mint r = 0, w = 1;
+		for (auto &v : *this) r += w * v, w *= x;
+		return r;
+	}
+
+	FPS log(int deg = -1) const {
+		assert(!(*this).empty() && (*this)[0] == mint(1));
+		if (deg == -1) deg = (int)this->size();
+		return (this->diff() * this->inv(deg)).pre(deg - 1).integral();
+	}
+
+	FPS pow(int64_t k, int deg = -1) const {
+		const int n = (int)this->size();
+		if (deg == -1) deg = n;
+		if (k == 0) {
+			FPS ret(deg);
+			if (deg) ret[0] = 1;
+			return ret;
+		}
+		for (int i = 0; i < n; i++) {
+			if ((*this)[i] != mint(0)) {
+				mint rev = mint(1) / (*this)[i];
+				FPS ret = (((*this * rev) >> i).log(deg) * k).exp(deg);
+				ret *= (*this)[i].pow(k);
+				ret = (ret << (i * k)).pre(deg);
+				if ((int)ret.size() < deg) ret.resize(deg, mint(0));
+				return ret;
 			}
-			sm = MX::O(dat[r], sm);
-		} while ((r & -r) != r);
-		return 0;
+			if (__int128_t(i + 1) * k >= deg) return FPS(deg, mint(0));
+		}
+		return FPS(deg, mint(0));
 	}
 
-	// l <= i xor (xor_val) < r となる i 全体に apply
-	void apply_xor_range(int l, int r, int xor_val, A a) {
-		assert(!(N & (N - 1)));
-		assert(0 <= xor_val && xor_val < N);
-		assert(0 <= l && l <= r && r <= N);
-
-		auto dfs = [&](auto& dfs, int idx, int seg_l, int seg_r) -> void {
-			if (l <= seg_l && seg_r <= r) {
-				return apply_at(idx, a);
-			}
-			if (r <= seg_l || seg_r <= l) return;
-			push(idx);
-			int seg_m = (seg_l + seg_r) / 2;
-			int bit = (seg_r - seg_l) / 2;
-			int left = 2 * idx + 0, right = 2 * idx + 1;
-			if (xor_val & bit) std::swap(left, right);
-			dfs(dfs, left, seg_l, seg_m);
-			dfs(dfs, right, seg_m, seg_r);
-			update(idx);
-		};
-		dfs(dfs, 1, 0, N);
-	}
-
-	private:
-	inline int msb(const int &a) { return a ? 31 - __builtin_clz(a) : -1; }
-	void apply_at(int k, A a) {
-		long long sz = 1 << (LOG - msb(k));
-		dat[k] = ActedMonoid::O(dat[k], a, sz);
-		if (k < size) has_laz[k] = 1, laz[k] = MA::O(laz[k], a);
-	}
-	void push(int k) {
-		if (!has_laz[k]) return;
-		has_laz[k] = 0;
-		apply_at(2 * k, laz[k]), apply_at(2 * k + 1, laz[k]);
-		laz[k] = MA::I();
-	}
+	static void *ntt_ptr;
+	static void set_fft();
+	FPS &operator*=(const FPS &r);
+	void ntt();
+	void intt();
+	void ntt_doubling();
+	static int ntt_pr();
+	FPS inv(int deg = -1) const;
+	FPS exp(int deg = -1) const;
 };
-// ===== END INCLUDE: lazy-segment-tree.hpp =====
+template <typename mint>
+void *FormalPowerSeries<mint>::ntt_ptr = nullptr;
+// ===== END INCLUDE: ./formal-power-series.hpp =====
 
-template <typename T>
-using sum_segtree = SegmentTree<MONOID::Add<T>>;
-template <typename T>
-using min_segtree = SegmentTree<MONOID::Min<T>>;
-template <typename T>
-using max_segtree = SegmentTree<MONOID::Max<T>>;
+template <typename mint>
+void FormalPowerSeries<mint>::set_fft() {
+	if (!ntt_ptr) ntt_ptr = new NTT<mint>;
+}
 
-template <typename T>
-using addmax_lazyseg = LazySegmentTree<ACTED_MONOID::Add_Max<T>>;
-template <typename T>
-using addmin_lazyseg = LazySegmentTree<ACTED_MONOID::Add_Min<T>>;
-template <typename T>
-using addsum_lazyseg = LazySegmentTree<ACTED_MONOID::Add_Sum<T>>;
-template <typename T>
-using updatemax_lazyseg = LazySegmentTree<ACTED_MONOID::Update_Max<T>>;
-template <typename T>
-using updatemin_lazyseg = LazySegmentTree<ACTED_MONOID::Update_Min<T>>;
-template <typename T>
-using updatesum_lazyseg = LazySegmentTree<ACTED_MONOID::Update_Sum<T>>;
+template <typename mint>
+FormalPowerSeries<mint>& FormalPowerSeries<mint>::operator*=(
+		const FormalPowerSeries<mint>& r) {
+	if (this->empty() || r.empty()) {
+		this->clear();
+		return *this;
+	}
+	set_fft();
+	auto ret = static_cast<NTT<mint>*>(ntt_ptr)->multiply(*this, r);
+	return *this = FormalPowerSeries<mint>(ret.begin(), ret.end());
+}
 
-// ===== END INCLUDE: ../../segment-tree/lazy-segment-tree-utility.hpp =====
+template <typename mint>
+void FormalPowerSeries<mint>::ntt() {
+	set_fft();
+	static_cast<NTT<mint>*>(ntt_ptr)->ntt(*this);
+}
 
+template <typename mint>
+void FormalPowerSeries<mint>::intt() {
+	set_fft();
+	static_cast<NTT<mint>*>(ntt_ptr)->intt(*this);
+}
+
+template <typename mint>
+void FormalPowerSeries<mint>::ntt_doubling() {
+	set_fft();
+	static_cast<NTT<mint>*>(ntt_ptr)->ntt_doubling(*this);
+}
+
+template <typename mint>
+int FormalPowerSeries<mint>::ntt_pr() {
+	set_fft();
+	return static_cast<NTT<mint>*>(ntt_ptr)->pr;
+}
+
+template <typename mint>
+FormalPowerSeries<mint> FormalPowerSeries<mint>::inv(int deg) const {
+	assert((*this)[0] != mint(0));
+	if (deg == -1) deg = (int)this->size();
+	FormalPowerSeries<mint> res(deg);
+	res[0] = {mint(1) / (*this)[0]};
+	for (int d = 1; d < deg; d <<= 1) {
+		FormalPowerSeries<mint> f(2 * d), g(2 * d);
+		for (int j = 0; j < std::min((int)this->size(), 2 * d); j++) f[j] = (*this)[j];
+		for (int j = 0; j < d; j++) g[j] = res[j];
+		f.ntt();
+		g.ntt();
+		for (int j = 0; j < 2 * d; j++) f[j] *= g[j];
+		f.intt();
+		for (int j = 0; j < d; j++) f[j] = mint(0);
+		f.ntt();
+		for (int j = 0; j < 2 * d; j++) f[j] *= g[j];
+		f.intt();
+		for (int j = d; j < std::min(2 * d, deg); j++) res[j] = -f[j];
+	}
+	return res.pre(deg);
+}
+
+template <typename mint>
+FormalPowerSeries<mint> FormalPowerSeries<mint>::exp(int deg) const {
+	using fps = FormalPowerSeries<mint>;
+	assert((*this).size() == 0 || (*this)[0] == mint(0));
+	if (deg == -1) deg = this->size();
+
+	fps inv;
+	inv.reserve(deg + 1);
+	inv.push_back(mint(0));
+	inv.push_back(mint(1));
+
+	auto inplace_integral = [&](fps& F) -> void {
+		const int n = (int)F.size();
+		auto mod = mint::get_mod();
+		while ((int)inv.size() <= n) {
+			int i = inv.size();
+			inv.push_back((-inv[mod % i]) * (mod / i));
+		}
+		F.insert(begin(F), mint(0));
+		for (int i = 1; i <= n; i++) F[i] *= inv[i];
+	};
+
+	auto inplace_diff = [](fps& F) -> void {
+		if (F.empty()) return;
+		F.erase(begin(F));
+		mint coeff = mint(1), one = mint(1);
+		for (int i = 0; i < (int)F.size(); i++) {
+			F[i] *= coeff;
+			coeff += one;
+		}
+	};
+
+	fps b{1, 1 < (int)this->size() ? (*this)[1] : 0}, c{1}, z1, z2{1, 1};
+	for (int m = 2; m < deg; m *= 2) {
+		auto y = b;
+		y.resize(2 * m);
+		y.ntt();
+		z1 = z2;
+		fps z(m);
+		for (int i = 0; i < m; ++i) z[i] = y[i] * z1[i];
+		z.intt();
+		fill(begin(z), begin(z) + m / 2, mint(0));
+		z.ntt();
+		for (int i = 0; i < m; ++i) z[i] *= -z1[i];
+		z.intt();
+		c.insert(end(c), begin(z) + m / 2, end(z));
+		z2 = c;
+		z2.resize(2 * m);
+		z2.ntt();
+		fps x(begin(*this), begin(*this) + std::min<int>(this->size(), m));
+		x.resize(m);
+		inplace_diff(x);
+		x.push_back(mint(0));
+		x.ntt();
+		for (int i = 0; i < m; ++i) x[i] *= y[i];
+		x.intt();
+		x -= b.diff();
+		x.resize(2 * m);
+		for (int i = 0; i < m - 1; ++i) x[m + i] = x[i], x[i] = mint(0);
+		x.ntt();
+		for (int i = 0; i < 2 * m; ++i) x[i] *= z2[i];
+		x.intt();
+		x.pop_back();
+		inplace_integral(x);
+		for (int i = m; i < std::min<int>(this->size(), 2 * m); ++i) x[i] += (*this)[i];
+		fill(begin(x), begin(x) + m, mint(0));
+		x.ntt();
+		for (int i = 0; i < 2 * m; ++i) x[i] *= y[i];
+		x.intt();
+		b.insert(end(b), begin(x) + m, end(x));
+	}
+	return fps{begin(b), begin(b) + deg};
+}
+
+/**
+ * @brief NTT mod用FPSライブラリ
+ * @docs docs/fps/ntt-friendly-fps.md
+ */
+// ===== END INCLUDE: ../../fps/ntt-friendly-fps.hpp =====
+// ===== BEGIN INCLUDE: ../../modint/montgomery-modint.hpp =====
+
+#include <cstdint>
+#include <iostream>
+#include <ostream>
+
+template <std::uint32_t mod>
+struct LazyMontgomeryModInt {
+	using mint = LazyMontgomeryModInt;
+	using i32 = std::int32_t;
+	using u32 = std::uint32_t;
+	using u64 = std::uint64_t;
+
+	static constexpr u32 get_r() {
+		u32 ret = mod;
+		for (i32 i = 0; i < 4; ++i) ret *= 2 - mod * ret;
+		return ret;
+	}
+
+	static constexpr u32 r = get_r();
+	static constexpr u32 n2 = -u64(mod) % mod;
+	static_assert(mod < (1 << 30), "invalid, mod >= 2 ^ 30");
+	static_assert((mod & 1) == 1, "invalid, mod % 2 == 0");
+	static_assert(r * mod == 1, "this code has bugs.");
+
+	u32 a;
+
+	constexpr LazyMontgomeryModInt() : a(0) {}
+	constexpr LazyMontgomeryModInt(const int64_t &b)
+			: a(reduce(u64(b % mod + mod) * n2)){};
+
+	static constexpr u32 reduce(const u64 &b) {
+		return (b + u64(u32(b) * u32(-r)) * mod) >> 32;
+	}
+
+	constexpr mint &operator+=(const mint &b) {
+		if (i32(a += b.a - 2 * mod) < 0) a += 2 * mod;
+		return *this;
+	}
+
+	constexpr mint &operator-=(const mint &b) {
+		if (i32(a -= b.a) < 0) a += 2 * mod;
+		return *this;
+	}
+
+	constexpr mint &operator*=(const mint &b) {
+		a = reduce(u64(a) * b.a);
+		return *this;
+	}
+
+	constexpr mint &operator/=(const mint &b) {
+		*this *= b.inverse();
+		return *this;
+	}
+
+	constexpr mint operator+(const mint &b) const { return mint(*this) += b; }
+	constexpr mint operator-(const mint &b) const { return mint(*this) -= b; }
+	constexpr mint operator*(const mint &b) const { return mint(*this) *= b; }
+	constexpr mint operator/(const mint &b) const { return mint(*this) /= b; }
+	constexpr bool operator==(const mint &b) const {
+		return (a >= mod ? a - mod : a) == (b.a >= mod ? b.a - mod : b.a);
+	}
+	constexpr bool operator!=(const mint &b) const {
+		return (a >= mod ? a - mod : a) != (b.a >= mod ? b.a - mod : b.a);
+	}
+	constexpr mint operator-() const { return mint() - mint(*this); }
+	constexpr mint operator+() const { return mint(*this); }
+
+	constexpr mint pow(u64 n) const {
+		mint ret(1), mul(*this);
+		while (n > 0) {
+			if (n & 1) ret *= mul;
+			mul *= mul;
+			n >>= 1;
+		}
+		return ret;
+	}
+
+	constexpr mint inverse() const {
+		int x = get(), y = mod, u = 1, v = 0, t = 0, tmp = 0;
+		while (y > 0) {
+			t = x / y;
+			x -= t * y, u -= t * v;
+			tmp = x, x = y, y = tmp;
+			tmp = u, u = v, v = tmp;
+		}
+		return mint{u};
+	}
+
+	friend std::ostream &operator<<(std::ostream &os, const mint &b) {
+		return os << b.get();
+	}
+
+	friend std::istream &operator>>(std::istream &is, mint &b) {
+		int64_t t;
+		is >> t;
+		b = LazyMontgomeryModInt<mod>(t);
+		return (is);
+	}
+
+	constexpr u32 get() const {
+		u32 ret = reduce(a);
+		return ret >= mod ? ret - mod : ret;
+	}
+
+	static constexpr u32 get_mod() { return mod; }
+};
+// ===== END INCLUDE: ../../modint/montgomery-modint.hpp =====
+
+using mint = LazyMontgomeryModInt<998244353>;
+using fps = FormalPowerSeries<mint>;
 void yamada::solve()
 {
-	IN(N,Q);
-	addsum_lazyseg<ll> seg0(vl(N,0));
-	addsum_lazyseg<ll> seg1(vl(N,0));
+	struct gps{
+		fps nume;
+		ll cnt; // deno: (1+x)^cnt
+	};
+	const fps BS{1,1};
+	auto stdize=[&](this auto stdize,gps &F,gps &G)->void{
+		if(F.cnt<G.cnt)stdize(G,F);
+		ll t=F.cnt-G.cnt;
+		G.nume*=BS.pow(t,t+1);
+		G.cnt+=t;
+	};
+	auto add=[&](gps F,gps G)->gps{ stdize(F,G); return{F.nume+G.nume,F.cnt}; };
+	auto mul=[&](gps F,gps G)->gps{ return{F.nume*G.nume,F.cnt+G.cnt}; };
 
-	ll u=0;
-	ll x=1;
-	while(Q--){
-		IN(I); --I;
-		if(u<I){
-			seg1.apply(u,I,1);
-			seg0.apply(u,I,x-u);
-		}
-		if(I<u){
-			seg1.apply(I+1,u+1,-1);
-			seg0.apply(I+1,u+1,u+x);
-		}
-		x+=abs(I-u);
-		u=I;
-	}
+	auto[Fl,F,Fr]=[&]()->array<vc<gps>,3>{
+		IN(N,BIND(A,B)=(PR(LL,LL)*N).uz());
+		vp cmp;
+		each(i,a,A|Enumerate)cmp.eb(a,i);
+		each(i,b,B|Enumerate)cmp.eb(b,i);
+		Sort(cmp);
 
-	vl ans(N);
-	rep(i,N)ans[i]=seg0[i]+seg1[i]*i;
-	out(ans);
+		vc<gps>Fl(N*2),F(N*2),Fr(N*2);
+		each(i,a,A|Enumerate){
+			ll ci=lb<pl>(cmp,{a,i});
+			Fl[ci]={BS,0};
+			F[ci]={fps{a},0};
+			Fr[ci]={fps{2},0};
+		}
+		each(i,b,B|Enumerate){
+			ll ci=lb<pl>(cmp,{b,i});
+			Fl[ci]={fps{0,2},1};
+			F[ci]={fps{b},1};
+			Fr[ci]={fps{1},0};
+		}
+		return{Fl,F,Fr};
+	}();
+	/* each(f,Fl)err(f.nume,f.cnt); */
+	/* each(f,F)err(f.nume,f.cnt); */
+	/* each(f,Fr)err(f.nume,f.cnt); */
+	ll N=len(F)/2;
+
+	/* err(N); */
+	gps ans=[&](this auto dfs,ll L,ll R)->array<gps,3>{
+		if(R-L==1)return {Fl[L],F[L],Fr[L]};
+		ll M=(L+R)/2;
+		auto[fl0,f0,fr0]=dfs(L,M);
+		auto[fl1,f1,fr1]=dfs(M,R);
+		auto f=add(mul(fl0,f1),mul(f0,fr1));
+		auto fl=mul(fl0,fl1);
+		auto fr=mul(fr0,fr1);
+		/* err(L,R,f.nume,f.cnt); */
+		/* err(L,R,fl.nume,fl.cnt); */
+		/* err(L,R,fr.nume,fr.cnt); */
+		return{fl,f,fr};
+	}(0,N*2)[1];
+	/* err(ans.nume,ans.cnt); */
+	/* err(BS.pow(0)); */
+
+	ans.nume*=BS.pow(ans.cnt,N).inv();
+	each(a,ans.nume.pre(N))out(a);
 }

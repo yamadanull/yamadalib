@@ -48,7 +48,7 @@ struct GEN {
 	auto operator++() const {
 		return ioImpl::GEN{[p = *this](long long i) { return p(i) + 1; }};
 	}
-	auto uz() { // UnZip
+	auto operator~() { // UnZip
 		return ioImpl::GEN{[p = *this](long long i) {
 			auto v = p(i);
 			using T = ranges::range_value_t<decltype(v)>;
