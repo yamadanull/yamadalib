@@ -1,4 +1,4 @@
-#include "../../template/multitest-template.hpp"
+#include "../../template/template.hpp"
 
 void yamada::solve()
 {
