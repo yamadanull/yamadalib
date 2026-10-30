@@ -39,10 +39,11 @@ constexpr auto Take = views::take;
 constexpr auto TakeWhile = views::take_while;
 constexpr auto Zip = views::zip;
 
-constexpr auto Rev = views::reverse; // ranges の方と混同しない
+constexpr auto Rev = views::reverse; // ranges の方と混同しない "Re"verse "v"iew
 constexpr auto Transform = views::transform; // ranges の方は多分使わない
 constexpr auto Iota = views::iota; // ranges の方は多分使わない
 
+constexpr auto vmap = views::transform;
 constexpr auto rtov = ranges::to<vector>();
 constexpr auto rtos = ranges::to<string>();
 

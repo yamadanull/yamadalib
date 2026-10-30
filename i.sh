@@ -8,27 +8,27 @@ echo "r.cpp コンパイル成功"
 cnt=0
 
 while true; do
-	echo "Start case $cnt"
+    echo "Start case $cnt"
 
-	rm -f fifo_a fifo_r
-	mkfifo fifo_a fifo_r
+    rm -f fifo_a fifo_r
+    mkfifo fifo_a fifo_r
 
-	# ダミーで両方開いてブロック防止
-	exec 3<>fifo_a
-	exec 4<>fifo_r
+    # ダミーで両方開いてブロック防止
+    exec 3<>fifo_a
+    exec 4<>fifo_r
 
-	./a.out < fifo_r > fifo_a 2> a.err &
-	pid_a=$!
-	./r.out < fifo_a > fifo_r 2> r.err &
-	pid_r=$!
+    ./a.out < fifo_r > fifo_a 2> a.err &
+    pid_a=$!
+    ./r.out < fifo_a > fifo_r 2> r.err &
+    pid_r=$!
 
-	wait $pid_a
-	status_a=$?
-	wait $pid_r
-	status_r=$?
+    wait $pid_a
+    status_a=$?
+    wait $pid_r
+    status_r=$?
 
-	exec 3>&-
-	exec 4>&-
+    exec 3>&-
+    exec 4>&-
 	if [ $status_a -ne 0 ] || [ $status_r -ne 0 ]; then
 		echo "Error on case $cnt"
 		echo "a.out status: $status_a"
@@ -42,6 +42,6 @@ while true; do
 		break
 	fi
 
-	cnt=$((cnt+1))
-	echo "Case $cnt OK"
+    cnt=$((cnt+1))
+    echo "Case $cnt OK"
 done

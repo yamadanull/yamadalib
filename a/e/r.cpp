@@ -3,15 +3,17 @@
 
 void yamada::solve()
 {
-	ll TC=1000;
-	OUT(TC);
-	FOR(TC){
-		ll N=randint(1,9);
-		ll K=randint(0,N+1);
-		vl A(N);
-		FOR_E(a,A)a=randint(1,N+1);
+	ll TC=1;
+	out(TC);
+	rep(TC){
+		ll N=randint(1,5);
+		ll M=randint(1,5);
+		string S,T;
+		rep(N)S+=randint(0,2)?'W':'R';
+		rep(M)T+=randint(0,2)?'W':'R';
 
-		OUT(N,K);
-		OUT(A);
+		out(N,M);
+		out(S);
+		out(T);
 	}
 }

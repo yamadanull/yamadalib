@@ -1,0 +1,53 @@
+{
+  "contest": {
+    "id": "arc233",
+    "title": "AtCoder Regular Contest++ 233",
+    "url": "https://atcoder.jp/contests/arc233"
+  },
+  "tasks": [
+    {
+      "id": "arc233_a",
+      "label": "A",
+      "title": "Strange Subset Sum",
+      "url": "https://atcoder.jp/contests/arc233/tasks/arc233_a",
+      "directory": {
+        "path": "a",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc233_b",
+      "label": "B",
+      "title": "Count of Euclid Function Call",
+      "url": "https://atcoder.jp/contests/arc233/tasks/arc233_b",
+      "directory": {
+        "path": "b",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc233_c",
+      "label": "C",
+      "title": "Equal Degree Deletion",
+      "url": "https://atcoder.jp/contests/arc233/tasks/arc233_c",
+      "directory": {
+        "path": "c",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "arc233_d",
+      "label": "D",
+      "title": "Zigzag Code for Cubic Functions",
+      "url": "https://atcoder.jp/contests/arc233/tasks/arc233_d",
+      "directory": {
+        "path": "d",
+        "testdir": "tests",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

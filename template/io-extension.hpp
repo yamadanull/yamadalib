@@ -1,4 +1,5 @@
 namespace yamada {
+// https://github.com/tatyam-prime/kyopro_library/blob/master/template/cpin.md
 namespace ioImpl {
 
 struct EVAL_TAG {};
@@ -48,7 +49,7 @@ struct GEN {
 	auto operator++() const {
 		return ioImpl::GEN{[p = *this](long long i) { return p(i) + 1; }};
 	}
-	auto operator~() { // UnZip
+	auto operator~() { // 例: BIND(L, R) = ~PR(--LL, LL)[N]()
 		return ioImpl::GEN{[p = *this](long long i) {
 			auto v = p(i);
 			using T = ranges::range_value_t<decltype(v)>;

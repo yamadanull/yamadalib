@@ -178,26 +178,33 @@ vector<T> RotateGrid(const vector<T> &A) {
 	}) | views::reverse | ranges::to<vector<T>>();
 }
 
-template <typename T, typename F>
-T bisect(T ok, T ng, F f) { // ok < ng でも ok > ng でも可能 // f(ok) && !f(ng) が必要
+template <integral T, typename F>
+T bisearch(T ok, T ng, F f) { // ok < ng でも ok > ng でも可能 // f(ok) && !f(ng) が必要
 	while (abs(ok - ng) > 1) { T mid = (ok + ng) / 2; (f(mid) ? ok : ng) = mid; } 
 	return ok;
 }
-
-template <typename T, typename F>
-T bisect(F f) { // 判定回数は上限を決め打ちした場合の高々２倍程度 // f(0) && !f(inf) が必要
-	T ok = 0, ng = 1;
-	while (f(ng)) ng *= 2;
-	while (ng - ok > 1) { T mid = ok + (ng - ok) / 2; (f(mid) ? ok : ng) = mid; } 
-	return ng;
+template <integral T, typename F> // 判定回数は上限を決め打ちした場合の高々２倍程度
+T bisearch(T l, F f) { // !f(l) && f(inf) が必要 (0000...1111...)
+	T r = l + 1;
+	while (!f(r)) r += r - l;
+	return bisearch(r, l, f);
 }
+template <integral T, typename F> 
+T bisearch(F f) { return bisearch(T(0), f); }
 
-template <typename T, typename F>
-T bisect_double(T ok, T ng, F f, int iter = 100) {
-	if (ok == ng) return ok;
+template <floating_point T, typename F>
+T bisearch(T ok, T ng, F f, int iter = 100) {
 	while (iter--) { T mid = (ok + ng) / 2; (f(mid) ? ok : ng) = mid; } 
 	return ng;
 }
+template <floating_point T, typename F>
+T bisearch(T l, F f, int iter = 100) {
+	T r = l + 1;
+	while (!f(r)) r += r - l;
+	return bisearch(r, l, f, iter);
+}
+template <floating_point T, typename F>
+T bisearch(F f, int iter = 100) { return bisearch(T(0), f, iter); }
 
 template <typename T0, typename T1, typename T2>
 bool inLR(T0 L, T1 x, T2 R){ return L <= x && x < R; }

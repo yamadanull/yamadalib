@@ -12,7 +12,7 @@ struct Update_Min {
 	using X = typename Monoid_X::value_type; // E
 	using A = typename Monoid_A::value_type; // optional<E>
 	static constexpr X O(const X& x, const A& a, const long long) {
-		return a.has_value() ? a : x;
+		return a.has_value() ? a.value() : x;
 	}
 };
 

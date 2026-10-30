@@ -13,4 +13,4 @@ using namespace std;
 namespace yamada {
 void solve();
 }
-int main() { int T; cin >> T; while(T--) yamada::solve(); }
+int main() { int T; cin >> T; while (T--) yamada::solve(); }

@@ -1,2 +1,1 @@
-N=3
-puts N
+require"ac-library-rb/segtree";N,Q=gets.split.map &:to_i;t=AcLibraryRb::SegTree.new([0]+gets.split.map(&:to_i),0){[_1,_2].max};$<.map{|n|l,r=n.split.map &:to_i;i=l;o=0;(a=t.get(i);t.set(i,0);j=i-l<=r-i ?l:r;o+=a*(i-j).abs;t.set(j,t.get(j)+a);i=t.max_right(i+1){_1==0})while i<r;p o}
