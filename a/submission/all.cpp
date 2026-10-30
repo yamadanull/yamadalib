@@ -1,5 +1,5 @@
 /**
- * date    : 2026-10-29 20:51:58
+ * date    : 2026-10-30 12:56:39
  * author  : yamadanull
  * library : https://github.com/yamadanull/yamadalib/
  */
@@ -190,26 +190,33 @@ vector<T> RotateGrid(const vector<T> &A) {
 	}) | views::reverse | ranges::to<vector<T>>();
 }
 
-template <typename T, typename F>
-T bisect(T ok, T ng, F f) { // ok < ng でも ok > ng でも可能 // f(ok) && !f(ng) が必要
+template <integral T, typename F>
+T bisearch(T ok, T ng, F f) { // ok < ng でも ok > ng でも可能 // f(ok) && !f(ng) が必要
 	while (abs(ok - ng) > 1) { T mid = (ok + ng) / 2; (f(mid) ? ok : ng) = mid; } 
 	return ok;
 }
-
-template <typename T, typename F>
-T bisect(F f) { // 判定回数は上限を決め打ちした場合の高々２倍程度 // f(0) && !f(inf) が必要
-	T ok = 0, ng = 1;
-	while (f(ng)) ng *= 2;
-	while (ng - ok > 1) { T mid = ok + (ng - ok) / 2; (f(mid) ? ok : ng) = mid; } 
-	return ng;
+template <integral T, typename F> // 判定回数は上限を決め打ちした場合の高々２倍程度
+T bisearch(T l, F f) { // !f(l) && f(inf) が必要 (0000...1111...)
+	T r = l + 1;
+	while (!f(r)) r += r - l;
+	return bisearch(r, l, f);
 }
+template <integral T, typename F> 
+T bisearch(F f) { return bisearch(T(0), f); }
 
-template <typename T, typename F>
-T bisect_double(T ok, T ng, F f, int iter = 100) {
-	if (ok == ng) return ok;
+template <floating_point T, typename F>
+T bisearch(T ok, T ng, F f, int iter = 100) {
 	while (iter--) { T mid = (ok + ng) / 2; (f(mid) ? ok : ng) = mid; } 
 	return ng;
 }
+template <floating_point T, typename F>
+T bisearch(T l, F f, int iter = 100) {
+	T r = l + 1;
+	while (!f(r)) r += r - l;
+	return bisearch(r, l, f, iter);
+}
+template <floating_point T, typename F>
+T bisearch(F f, int iter = 100) { return bisearch(T(0), f, iter); }
 
 template <typename T0, typename T1, typename T2>
 bool inLR(T0 L, T1 x, T2 R){ return L <= x && x < R; }
@@ -468,6 +475,7 @@ void trace(const T&... x) {
 // ===== END INCLUDE: io.hpp =====
 // ===== BEGIN INCLUDE: io-extension.hpp =====
 namespace yamada {
+// https://github.com/tatyam-prime/kyopro_library/blob/master/template/cpin.md
 namespace ioImpl {
 
 struct EVAL_TAG {};
@@ -517,7 +525,7 @@ struct GEN {
 	auto operator++() const {
 		return ioImpl::GEN{[p = *this](long long i) { return p(i) + 1; }};
 	}
-	auto operator~() { // UnZip
+	auto operator~() { // 例: BIND(L, R) = ~PR(--LL, LL)[N]()
 		return ioImpl::GEN{[p = *this](long long i) {
 			auto v = p(i);
 			using T = ranges::range_value_t<decltype(v)>;
@@ -630,10 +638,11 @@ constexpr auto Take = views::take;
 constexpr auto TakeWhile = views::take_while;
 constexpr auto Zip = views::zip;
 
-constexpr auto Rev = views::reverse; // ranges の方と混同しない
+constexpr auto Rev = views::reverse; // ranges の方と混同しない "Re"verse "v"iew
 constexpr auto Transform = views::transform; // ranges の方は多分使わない
 constexpr auto Iota = views::iota; // ranges の方は多分使わない
 
+constexpr auto vmap = views::transform;
 constexpr auto rtov = ranges::to<vector>();
 constexpr auto rtos = ranges::to<string>();
 
@@ -687,36 +696,9 @@ void solve();
 }
 int main() { yamada::solve(); }
 // ===== END INCLUDE: ../../template/template.hpp =====
-// ===== BEGIN INCLUDE: ../../shortest-path/bfs.hpp =====
+// ===== BEGIN INCLUDE: ../../shortest-path/dijkstra.hpp =====
 
-vector<int> bfs(vector<vector<int>>& g, vector<int> st) {
-	vector<int> d(g.size(), -1);
-	queue<int> Q;
-	for (auto&& s : st) {
-		d[s] = 0;
-		Q.push(s);
-	}
-	while (!Q.empty()) {
-		int cur = Q.front();
-		Q.pop();
-		int cd = d[cur];
-		for (auto&& dst : g[cur]) {
-			if (d[dst] == -1) {
-				d[dst] = cd + 1;
-				Q.push(dst);
-			}
-		}
-	}
-	return d;
-}
-
-vector<int> bfs(vector<vector<int>>& g, int st = 0) {
-	vector<int> s;
-	s.emplace_back(st);
-	return bfs(g, s);
-}
-// ===== END INCLUDE: ../../shortest-path/bfs.hpp =====
-// ===== BEGIN INCLUDE: ../../graph/graph-template.hpp =====
+// ===== BEGIN INCLUDE: ../graph/graph-template.hpp =====
 
 #include <vector>
 #include <iostream>
@@ -770,40 +752,66 @@ WeightedGraph<T> wgraph(int N, int M = -1, bool is_directed = false, bool is_1or
 	}
 	return g;
 }
-// ===== END INCLUDE: ../../graph/graph-template.hpp =====
-using namespace yamada;
+// ===== END INCLUDE: ../graph/graph-template.hpp =====
+
+// unreachable -> -1
+template <typename T>
+vector<T> dijkstra(WeightedGraph<T> &g, vector<int> start) {
+	using P = pair<T, int>;
+	int N = (int)g.size();
+	vector<T> d(N, T(-1));
+	priority_queue<P, vector<P>, greater<P> > Q;
+	for (auto v : start) {
+		d[v] = 0;
+		Q.emplace(0, v);
+	}
+	while (!Q.empty()) {
+		P p = Q.top();
+		Q.pop();
+		int cur = p.second;
+		if (d[cur] < p.first) continue;
+		for (auto dst : g[cur]) {
+			if (d[dst] == T(-1) || d[cur] + dst.cost < d[dst]) {
+				d[dst] = d[cur] + dst.cost;
+				Q.emplace(d[dst], dst);
+			}
+		}
+	}
+	return d;
+}
+
+template <typename T>
+vector<T> dijkstra(WeightedGraph<T> &g, int start = 0) {
+	vector<int> st;
+	st.emplace_back(start);
+	return dijkstra(g, st);
+}
+
+/**
+ * @brief ダイクストラ法
+ * @docs docs/shortest-path/dijkstra.md
+ */
+// ===== END INCLUDE: ../../shortest-path/dijkstra.hpp =====
 
 void yamada::solve()
 {
-	IN(N,P1,Q1,P2,Q2,XY=PR(LL,LL)*N,AB=PR(LL,LL)*N);
-	ll M=1001;
-	auto idx=[&](ll i,ll j)->ll{return i*M+j;};
-	UnweightedGraph g(M*M);
-	rep(x,M)rep(y,M){
-		ll a=x*P1/Q1;
-		ll b=y*P2/Q2;
-		if(a<M&&b<M)g[idx(x,y)].eb(idx(a,b));
-		if(x<M-1)g[idx(x,y)].eb(idx(x+1,y));
-	}
-	VV(ll,dist,N,N);
-	rep(i,N){
-		auto[x,y]=XY[i];
-		auto dp=bfs(g,idx(x,y));
-		rep(j,N){
-			auto[a,b]=AB[j];
-			ll d=dp[idx(a,b)];
-			dist[i][j]=d<0?infLL:(ll)d;
-		}
-	}
+	IN(N,M,K,BC=PR(LL*N,LL)[M]);
+	auto tomsk=[&](vl B)->ll{
+		ll ans=0;
+		each(i,b,B|Enumerate)ans+=b<<i;
+		return ans;
+	};
+	set<ll>S;
+	rep(K)S.insert(tomsk(LL[N]()));
 
-	ll ans=infLL;
-	nxp(N,[&](auto P){
-		ll bns=0;
-		rep(i,N){
-			bns+=dist[i][P[i]];
-			if(bns>=infLL)break;
+	WeightedGraph<ll> g(1<<N);
+	each(B,C,BC){
+		ll msk=tomsk(B);
+		rep(u,1<<N){
+			ll v=u^msk;
+			if(S.find(v)!=S.end())continue;
+			g[u].eb(u^msk,C);
 		}
-		amin(ans,bns);
-	});
-	out(ans==infLL? -1:ans);
+	}
+	out(dijkstra(g).back());
 }

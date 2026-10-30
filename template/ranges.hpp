@@ -43,10 +43,10 @@ constexpr auto Rev = views::reverse; // ranges の方と混同しない "Re"vers
 constexpr auto Transform = views::transform; // ranges の方は多分使わない
 constexpr auto Iota = views::iota; // ranges の方は多分使わない
 
-constexpr auto vmap = views::transform;
+constexpr auto Map = views::transform;
+
 constexpr auto rtov = ranges::to<vector>();
 constexpr auto rtos = ranges::to<string>();
 
-using namespace placeholders;
-constexpr auto Ofs(const int K = 1) { return views::transform(bind(plus(), _1, K)); }
+constexpr auto Ofs(const int K = 1) { return views::transform(bind(plus(), placeholders::_1, K)); }
 } // namespace yamada
