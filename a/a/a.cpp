@@ -1,26 +1,38 @@
 #include "../../template/template.hpp"
-#include "../../shortest-path/dijkstra.hpp"
-#include "../../graph/graph-template.hpp"
+#include "../../segment-tree/lazy-segment-tree-utility.hpp"
+using namespace yamada;
+
+bool check(vl A,vl B){
+	ll N=len(A);
+	addmax_lazyseg<ll> seg(A);
+	rep(i,N){
+		if(B[i]){
+			seg.apply(i,N,1);
+		}
+		else{
+			seg.apply(0,i+1,1);
+		}
+	}
+	each(a,seg.get())if(a%2==0)return 0;
+	return 1;
+}
 
 void yamada::solve()
 {
-	IN(N,M,K,BC=PR(LL*N,LL)[M]);
-	auto tomsk=[&](vl B)->ll{
-		ll ans=0;
-		each(i,b,B|Enumerate)ans+=b<<i;
-		return ans;
-	};
-	set<ll>S;
-	rep(K)S.insert(tomsk(LL[N]()));
-
-	WeightedGraph<ll> g(1<<N);
-	each(B,C,BC){
-		ll msk=tomsk(B);
-		rep(u,1<<N){
-			ll v=u^msk;
-			if(S.find(v)!=S.end())continue;
-			g[u].eb(u^msk,C);
+	IN(N);
+	vl A=STR()|Map([&](auto c)->ll{return c=='o';})|rtov;
+	auto output=[&](vl B)->void{
+		if(YesNo(!B.empty())){
+			string ans;
+			each(b,B)ans+=b?'R':'L';
+			out(ans);
 		}
-	}
-	out(dijkstra(g).back());
+	};
+	auto B=A;
+	each(b,B|Stride(2))b^=1;
+	auto C=B;
+	each(c,C)c^=1;
+	if(check(A,B)){output(B);return;}
+	if(check(A,C)){output(C);return;}
+	out("No");
 }

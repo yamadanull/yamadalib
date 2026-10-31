@@ -1,10 +1,10 @@
 /**
- * date    : 2026-10-30 12:56:39
+ * date    : 2026-10-30 22:53:31
  * author  : yamadanull
  * library : https://github.com/yamadanull/yamadalib/
  */
 
-// ===== BEGIN INCLUDE: ../../template/template.hpp =====
+// ===== BEGIN INCLUDE: ../../template/multitest-template.hpp =====
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -642,12 +642,12 @@ constexpr auto Rev = views::reverse; // ranges の方と混同しない "Re"vers
 constexpr auto Transform = views::transform; // ranges の方は多分使わない
 constexpr auto Iota = views::iota; // ranges の方は多分使わない
 
-constexpr auto vmap = views::transform;
+constexpr auto Map = views::transform;
+
 constexpr auto rtov = ranges::to<vector>();
 constexpr auto rtos = ranges::to<string>();
 
-using namespace placeholders;
-constexpr auto Ofs(const int K = 1) { return views::transform(bind(plus(), _1, K)); }
+constexpr auto Ofs(const int K = 1) { return views::transform(bind(plus(), placeholders::_1, K)); }
 } // namespace yamada
 // ===== END INCLUDE: ranges.hpp =====
 // ===== BEGIN INCLUDE: macro.hpp =====
@@ -694,124 +694,51 @@ constexpr auto Ofs(const int K = 1) { return views::transform(bind(plus(), _1, K
 namespace yamada {
 void solve();
 }
-int main() { yamada::solve(); }
-// ===== END INCLUDE: ../../template/template.hpp =====
-// ===== BEGIN INCLUDE: ../../shortest-path/dijkstra.hpp =====
+int main() { int T; cin >> T; while (T--) yamada::solve(); }
+// ===== END INCLUDE: ../../template/multitest-template.hpp =====
+using namespace yamada;
 
-// ===== BEGIN INCLUDE: ../graph/graph-template.hpp =====
-
-#include <vector>
-#include <iostream>
-
-template <typename T>
-struct edge {
-	int src, to;
-	T cost;
-
-	edge(int _to, T _cost) : src(-1), to(_to), cost(_cost) {}
-	edge(int _src, int _to, T _cost) : src(_src), to(_to), cost(_cost) {}
-
-	edge &operator=(const int &x) {
-		to = x;
-		return *this;
+bool check(vl mexs,multiset<ll> &st,ll cnt){ // stのうちcnt個は使えない
+	if(len(st)<cnt)return 0;
+	if(mexs.empty())return 1;
+	if(Max(mexs)==0){
+		return len(st)-cnt>=len(mexs);
 	}
-
-	operator int() const { return to; }
-};
-template <typename T>
-using Edges = std::vector<edge<T>>;
-template <typename T>
-using WeightedGraph = std::vector<Edges<T>>;
-using UnweightedGraph = std::vector<std::vector<int>>;
-
-// Input of (Unweighted) Graph
-UnweightedGraph graph(int N, int M = -1, bool is_directed = false, bool is_1origin = true) {
-	UnweightedGraph g(N);
-	if (M == -1) M = N - 1;
-	for (int _ = 0; _ < M; _++) {
-		int x, y;
-		std::cin >> x >> y;
-		if (is_1origin) x--, y--;
-		g[x].push_back(y);
-		if (!is_directed) g[y].push_back(x);
-	}
-	return g;
-}
-
-// Input of Weighted Graph
-template <typename T>
-WeightedGraph<T> wgraph(int N, int M = -1, bool is_directed = false, bool is_1origin = true) {
-	WeightedGraph<T> g(N);
-	if (M == -1) M = N - 1;
-	for (int _ = 0; _ < M; _++) {
-		int x, y; std::cin >> x >> y;
-		T c; std::cin >> c;
-		if (is_1origin) x--, y--;
-		g[x].emplace_back(x, y, c);
-		if (!is_directed) g[y].emplace_back(y, x, c);
-	}
-	return g;
-}
-// ===== END INCLUDE: ../graph/graph-template.hpp =====
-
-// unreachable -> -1
-template <typename T>
-vector<T> dijkstra(WeightedGraph<T> &g, vector<int> start) {
-	using P = pair<T, int>;
-	int N = (int)g.size();
-	vector<T> d(N, T(-1));
-	priority_queue<P, vector<P>, greater<P> > Q;
-	for (auto v : start) {
-		d[v] = 0;
-		Q.emplace(0, v);
-	}
-	while (!Q.empty()) {
-		P p = Q.top();
-		Q.pop();
-		int cur = p.second;
-		if (d[cur] < p.first) continue;
-		for (auto dst : g[cur]) {
-			if (d[dst] == T(-1) || d[cur] + dst.cost < d[dst]) {
-				d[dst] = d[cur] + dst.cost;
-				Q.emplace(d[dst], dst);
+	if(st.empty())return 0;
+	if(Sum(mexs)>len(st)-cnt)return 0;
+	/* err(mexs); */
+	/* err(st); */
+	vl nexs;
+	each(m,mexs)if(m){
+		rep(i,m){
+			auto it=st.find(i);
+			if(it==st.end()){
+				nexs.eb(i);
+			}
+			else{
+				if(i==0 || i==1){
+					++cnt;
+				}
+				else st.erase(it);
 			}
 		}
 	}
-	return d;
+	each(m,mexs)if(!m)cnt++;
+	return check(nexs,st,cnt);
 }
-
-template <typename T>
-vector<T> dijkstra(WeightedGraph<T> &g, int start = 0) {
-	vector<int> st;
-	st.emplace_back(start);
-	return dijkstra(g, st);
-}
-
-/**
- * @brief ダイクストラ法
- * @docs docs/shortest-path/dijkstra.md
- */
-// ===== END INCLUDE: ../../shortest-path/dijkstra.hpp =====
 
 void yamada::solve()
 {
-	IN(N,M,K,BC=PR(LL*N,LL)[M]);
-	auto tomsk=[&](vl B)->ll{
-		ll ans=0;
-		each(i,b,B|Enumerate)ans+=b<<i;
-		return ans;
-	};
-	set<ll>S;
-	rep(K)S.insert(tomsk(LL[N]()));
-
-	WeightedGraph<ll> g(1<<N);
-	each(B,C,BC){
-		ll msk=tomsk(B);
-		rep(u,1<<N){
-			ll v=u^msk;
-			if(S.find(v)!=S.end())continue;
-			g[u].eb(u^msk,C);
-		}
+	IN(N,A=LL*N);
+	if(N==1){
+		DIE(max<ll>(1,A[0]));
 	}
-	out(dijkstra(g).back());
+	multiset<ll> st;
+	each(a,A)st.insert(a);
+
+	/* check({4},st,0); */
+	out(bisearch<ll>(1,1<<18,[&](ll mex){
+		auto st2=st;
+		return check({mex},st2,0);
+	}));
 }
