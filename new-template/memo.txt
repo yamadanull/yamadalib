@@ -1,0 +1,37 @@
+・工事中
+
+現状の不満
+・変数 x に処理 f, g, h を施すとき、h(g(f(x))) と書かなくてはならない。これは読むときも書くときも脳みそに優しくない。x|f|g|h と書きたい。
+・views によってその問題は1割ぐらい解決されたが、タンピング数が終わってる。特にラムダを渡すとき
+・要素がtupleのとき、ラムダ系のranges関数に渡すと一つの引数にtupleを渡さなければならないゴミ仕様をどうにかしたい
+
+設計
+・views のアダプタ関数は自作できるらしいので、それを作りまくる。
+・views ではない ranges 関数も使いたいものはパイプで渡せるようにする
+・テンプレートにないライブラリもパイプで渡せるようにしたいけど（転倒数とか）どうしよう
+
+・基本、元の名前のアッパーキャメルケースにする
+・例外
+	views::transform -> Map 
+	views::reverse -> Rev
+	ranges::fold_left -> Fold
+	ranges::fold_right -> rFold
+	ranges::all_of -> All
+	ranges::any_of -> Any
+
+・自作したい
+	Bisearch
+	Range（python の range(...) と同じ）
+	Permutation
+	Sum
+	out
+	YesNo
+
+・ラムダ式を渡す関数は << で渡す（多重カッコによる複雑化の解消）（結合順序的に << がベストだと思った）
+	ex) auto B = A | Map << [&](auto a){ return a * 2; }
+
+・MAP(a, A) {処理} で A|views::transform([&](auto a){処理}) と等価（波括弧は必須。returnと`;`を忘れない）
+・EACH(a, A) {処理} で ranges::for_each(A,[&](auto a){処理}) と等価（波括弧は必須。`;`を忘れない）
+
+考える必要のあること
+・破壊的変更をするranges関数に一貫した命名をしたい。これはパイプで渡す

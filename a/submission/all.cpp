@@ -1,5 +1,5 @@
 /**
- * date    : 2026-10-30 22:53:31
+ * date    : 2026-11-01 00:45:45
  * author  : yamadanull
  * library : https://github.com/yamadanull/yamadalib/
  */
@@ -696,49 +696,201 @@ void solve();
 }
 int main() { int T; cin >> T; while (T--) yamada::solve(); }
 // ===== END INCLUDE: ../../template/multitest-template.hpp =====
-using namespace yamada;
+// ===== BEGIN INCLUDE: ../../modint/montgomery-modint.hpp =====
 
-bool check(vl mexs,multiset<ll> &st,ll cnt){ // stのうちcnt個は使えない
-	if(len(st)<cnt)return 0;
-	if(mexs.empty())return 1;
-	if(Max(mexs)==0){
-		return len(st)-cnt>=len(mexs);
+#include <cstdint>
+#include <iostream>
+#include <ostream>
+
+template <std::uint32_t mod>
+struct LazyMontgomeryModInt {
+	using mint = LazyMontgomeryModInt;
+	using i32 = std::int32_t;
+	using u32 = std::uint32_t;
+	using u64 = std::uint64_t;
+
+	static constexpr u32 get_r() {
+		u32 ret = mod;
+		for (i32 i = 0; i < 4; ++i) ret *= 2 - mod * ret;
+		return ret;
 	}
-	if(st.empty())return 0;
-	if(Sum(mexs)>len(st)-cnt)return 0;
-	/* err(mexs); */
-	/* err(st); */
-	vl nexs;
-	each(m,mexs)if(m){
-		rep(i,m){
-			auto it=st.find(i);
-			if(it==st.end()){
-				nexs.eb(i);
-			}
-			else{
-				if(i==0 || i==1){
-					++cnt;
-				}
-				else st.erase(it);
-			}
+
+	static constexpr u32 r = get_r();
+	static constexpr u32 n2 = -u64(mod) % mod;
+	static_assert(mod < (1 << 30), "invalid, mod >= 2 ^ 30");
+	static_assert((mod & 1) == 1, "invalid, mod % 2 == 0");
+	static_assert(r * mod == 1, "this code has bugs.");
+
+	u32 a;
+
+	constexpr LazyMontgomeryModInt() : a(0) {}
+	constexpr LazyMontgomeryModInt(const int64_t &b)
+			: a(reduce(u64(b % mod + mod) * n2)){};
+
+	static constexpr u32 reduce(const u64 &b) {
+		return (b + u64(u32(b) * u32(-r)) * mod) >> 32;
+	}
+
+	constexpr mint &operator+=(const mint &b) {
+		if (i32(a += b.a - 2 * mod) < 0) a += 2 * mod;
+		return *this;
+	}
+
+	constexpr mint &operator-=(const mint &b) {
+		if (i32(a -= b.a) < 0) a += 2 * mod;
+		return *this;
+	}
+
+	constexpr mint &operator*=(const mint &b) {
+		a = reduce(u64(a) * b.a);
+		return *this;
+	}
+
+	constexpr mint &operator/=(const mint &b) {
+		*this *= b.inverse();
+		return *this;
+	}
+
+	constexpr mint operator+(const mint &b) const { return mint(*this) += b; }
+	constexpr mint operator-(const mint &b) const { return mint(*this) -= b; }
+	constexpr mint operator*(const mint &b) const { return mint(*this) *= b; }
+	constexpr mint operator/(const mint &b) const { return mint(*this) /= b; }
+	constexpr bool operator==(const mint &b) const {
+		return (a >= mod ? a - mod : a) == (b.a >= mod ? b.a - mod : b.a);
+	}
+	constexpr bool operator!=(const mint &b) const {
+		return (a >= mod ? a - mod : a) != (b.a >= mod ? b.a - mod : b.a);
+	}
+	constexpr mint operator-() const { return mint() - mint(*this); }
+	constexpr mint operator+() const { return mint(*this); }
+
+	constexpr mint pow(u64 n) const {
+		mint ret(1), mul(*this);
+		while (n > 0) {
+			if (n & 1) ret *= mul;
+			mul *= mul;
+			n >>= 1;
 		}
+		return ret;
 	}
-	each(m,mexs)if(!m)cnt++;
-	return check(nexs,st,cnt);
+
+	constexpr mint inverse() const {
+		int x = get(), y = mod, u = 1, v = 0, t = 0, tmp = 0;
+		while (y > 0) {
+			t = x / y;
+			x -= t * y, u -= t * v;
+			tmp = x, x = y, y = tmp;
+			tmp = u, u = v, v = tmp;
+		}
+		return mint{u};
+	}
+
+	friend std::ostream &operator<<(std::ostream &os, const mint &b) {
+		return os << b.get();
+	}
+
+	friend std::istream &operator>>(std::istream &is, mint &b) {
+		int64_t t;
+		is >> t;
+		b = LazyMontgomeryModInt<mod>(t);
+		return (is);
+	}
+
+	constexpr u32 get() const {
+		u32 ret = reduce(a);
+		return ret >= mod ? ret - mod : ret;
+	}
+
+	static constexpr u32 get_mod() { return mod; }
+};
+// ===== END INCLUDE: ../../modint/montgomery-modint.hpp =====
+// ===== BEGIN INCLUDE: ../../graph/graph-template.hpp =====
+
+#include <vector>
+#include <iostream>
+
+template <typename T>
+struct edge {
+	int src, to;
+	T cost;
+
+	edge(int _to, T _cost) : src(-1), to(_to), cost(_cost) {}
+	edge(int _src, int _to, T _cost) : src(_src), to(_to), cost(_cost) {}
+
+	edge &operator=(const int &x) {
+		to = x;
+		return *this;
+	}
+
+	operator int() const { return to; }
+};
+template <typename T>
+using Edges = std::vector<edge<T>>;
+template <typename T>
+using WeightedGraph = std::vector<Edges<T>>;
+using UnweightedGraph = std::vector<std::vector<int>>;
+
+// Input of (Unweighted) Graph
+UnweightedGraph graph(int N, int M = -1, bool is_directed = false, bool is_1origin = true) {
+	UnweightedGraph g(N);
+	if (M == -1) M = N - 1;
+	for (int _ = 0; _ < M; _++) {
+		int x, y;
+		std::cin >> x >> y;
+		if (is_1origin) x--, y--;
+		g[x].push_back(y);
+		if (!is_directed) g[y].push_back(x);
+	}
+	return g;
 }
 
+// Input of Weighted Graph
+template <typename T>
+WeightedGraph<T> wgraph(int N, int M = -1, bool is_directed = false, bool is_1origin = true) {
+	WeightedGraph<T> g(N);
+	if (M == -1) M = N - 1;
+	for (int _ = 0; _ < M; _++) {
+		int x, y; std::cin >> x >> y;
+		T c; std::cin >> c;
+		if (is_1origin) x--, y--;
+		g[x].emplace_back(x, y, c);
+		if (!is_directed) g[y].emplace_back(y, x, c);
+	}
+	return g;
+}
+// ===== END INCLUDE: ../../graph/graph-template.hpp =====
+
+using mint = LazyMontgomeryModInt<998244353>;
 void yamada::solve()
 {
-	IN(N,A=LL*N);
-	if(N==1){
-		DIE(max<ll>(1,A[0]));
-	}
-	multiset<ll> st;
-	each(a,A)st.insert(a);
+	IN(N);
+	auto g=graph(N);
+	IN(S=STR,T=STR);
+	each(c,S)c-='0';
+	each(c,T)c-='0';
+	vl memo(N,-1);
+	bool ans=1;
+	[&](this auto dfs,ll u,ll p=-1,ll dep=0,bool kuri=false)->void{
+		{
+			ll m=S[u]^T[u]^kuri;
+			if(memo[dep]>=0 && m^memo[dep])ans=0;
+			memo[dep]=m;
+		}
+		kuri=(!T[u]&&kuri || (!T[u]||kuri)&&S[u]);
+		err(u,p,kuri);
+		each(v,g[u])if(v!=p){
+			dfs(v,u,dep+1,kuri);
+		}
+	}(0);
+	if(!ans)DIE(-1);
+	err(memo);
 
-	/* check({4},st,0); */
-	out(bisearch<ll>(1,1<<18,[&](ll mex){
-		auto st2=st;
-		return check({mex},st2,0);
-	}));
+	mint cof=1;
+	mint bns=0;
+	each(c,memo){
+		if(c<0)break;
+		bns+=cof*c;
+		cof*=2;
+	}
+	out(bns);
 }
