@@ -26,13 +26,13 @@
 	Bisearch
 	MinIndex
 	MaxIndex
-	MinBy
-	MaxBy
+	Concat
 	Sorted
+	Uniqued
 	FindIndex
 	Range（python の range(...) と同じ）（Iota、Rev、Stride で代替可能）
 	Permutation
-	Sum (ラムダ式渡せる)
+	Sum (ラムダ渡せる)
 	Add
 	Out
 	YesNo
@@ -42,8 +42,13 @@
 ・渡すものが tuple だったとき、複数の引数で取れる
 	ex) auto B = A | Enumerate | Map << [&](auto i, auto a){ return i + a; } | rtov
 
+・破壊的変更をするranges関数はパイプで渡さなくていい
+
+以下のマクロは慣れてきたら実装するか判断
 ・A|MAP(args...) {処理} で A | Map << [&](...) {処理} と等価（波括弧は必須。returnと`;`を忘れない）
 ・A|EACH(args...) {処理} で A | ForEach << [&](...) {処理} と等価（波括弧は必須。`;`を忘れない）
 
 考える必要のあること
-・破壊的変更をするranges関数に一貫した命名をしたい。これはパイプで渡す
+・Fold、使ったことないからどうすればいいか
+・Projってあったら便利だけどそんな苦労せずに代替可能だし実装が複雑になるのも良くないから要らないと思う
+・MaxElement いる？ MaxIndex だけでいいだろ
