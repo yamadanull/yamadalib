@@ -1,19 +1,22 @@
 #include "../../template/multitest-template.hpp"
-#include "../../modint/montgomery-modint.hpp"
+#include "../../segment-tree/lazy-segment-tree-utility.hpp"
 
-using mint = LazyMontgomeryModInt<998244353>;
 void yamada::solve()
 {
-	IN(N,M);
-	VV(mint,dp,N+1,M+3);
+	IN(N,BIND(L,R)=~PR(--LL,--LL)[N-1]);
+	L.insert(L.begin(),0);
+	R.insert(R.begin(),0);
+
+	vvl Rinv(N);
+	rep(u,N)Rinv[R[u]].eb(u);
+
+	updatesum_lazyseg<ll> seg(vl(N,1));
+	ll ans=0;
 	rep(i,N){
-		dp[i+1][2]+=1;
-		CumulativeSum cum(dp[i]);
-		rep(j,2,M+3){
-			ll l=j+2>>1;
-			ll r=j;
-			dp[i+1][j]+=cum(l,r+1);
+		if(i>0)seg.apply(L[i],R[i]+1,0);
+		each(u,Rinv[i]){
+			ans+=seg(L[u],R[u]+1);
 		}
 	}
-	out(dp[N][M+2]);
+	out(ans-1);
 }

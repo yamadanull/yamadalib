@@ -1,10 +1,10 @@
 /**
- * date    : 2026-11-01 00:45:45
+ * date    : 2026-11-05 20:14:10
  * author  : yamadanull
  * library : https://github.com/yamadanull/yamadalib/
  */
 
-// ===== BEGIN INCLUDE: ../../template/multitest-template.hpp =====
+// ===== BEGIN INCLUDE: ../../template/template.hpp =====
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -694,117 +694,11 @@ constexpr auto Ofs(const int K = 1) { return views::transform(bind(plus(), place
 namespace yamada {
 void solve();
 }
-int main() { int T; cin >> T; while (T--) yamada::solve(); }
-// ===== END INCLUDE: ../../template/multitest-template.hpp =====
-// ===== BEGIN INCLUDE: ../../modint/montgomery-modint.hpp =====
+int main() { yamada::solve(); }
+// ===== END INCLUDE: ../../template/template.hpp =====
+// ===== BEGIN INCLUDE: ../../shortest-path/dijkstra.hpp =====
 
-#include <cstdint>
-#include <iostream>
-#include <ostream>
-
-template <std::uint32_t mod>
-struct LazyMontgomeryModInt {
-	using mint = LazyMontgomeryModInt;
-	using i32 = std::int32_t;
-	using u32 = std::uint32_t;
-	using u64 = std::uint64_t;
-
-	static constexpr u32 get_r() {
-		u32 ret = mod;
-		for (i32 i = 0; i < 4; ++i) ret *= 2 - mod * ret;
-		return ret;
-	}
-
-	static constexpr u32 r = get_r();
-	static constexpr u32 n2 = -u64(mod) % mod;
-	static_assert(mod < (1 << 30), "invalid, mod >= 2 ^ 30");
-	static_assert((mod & 1) == 1, "invalid, mod % 2 == 0");
-	static_assert(r * mod == 1, "this code has bugs.");
-
-	u32 a;
-
-	constexpr LazyMontgomeryModInt() : a(0) {}
-	constexpr LazyMontgomeryModInt(const int64_t &b)
-			: a(reduce(u64(b % mod + mod) * n2)){};
-
-	static constexpr u32 reduce(const u64 &b) {
-		return (b + u64(u32(b) * u32(-r)) * mod) >> 32;
-	}
-
-	constexpr mint &operator+=(const mint &b) {
-		if (i32(a += b.a - 2 * mod) < 0) a += 2 * mod;
-		return *this;
-	}
-
-	constexpr mint &operator-=(const mint &b) {
-		if (i32(a -= b.a) < 0) a += 2 * mod;
-		return *this;
-	}
-
-	constexpr mint &operator*=(const mint &b) {
-		a = reduce(u64(a) * b.a);
-		return *this;
-	}
-
-	constexpr mint &operator/=(const mint &b) {
-		*this *= b.inverse();
-		return *this;
-	}
-
-	constexpr mint operator+(const mint &b) const { return mint(*this) += b; }
-	constexpr mint operator-(const mint &b) const { return mint(*this) -= b; }
-	constexpr mint operator*(const mint &b) const { return mint(*this) *= b; }
-	constexpr mint operator/(const mint &b) const { return mint(*this) /= b; }
-	constexpr bool operator==(const mint &b) const {
-		return (a >= mod ? a - mod : a) == (b.a >= mod ? b.a - mod : b.a);
-	}
-	constexpr bool operator!=(const mint &b) const {
-		return (a >= mod ? a - mod : a) != (b.a >= mod ? b.a - mod : b.a);
-	}
-	constexpr mint operator-() const { return mint() - mint(*this); }
-	constexpr mint operator+() const { return mint(*this); }
-
-	constexpr mint pow(u64 n) const {
-		mint ret(1), mul(*this);
-		while (n > 0) {
-			if (n & 1) ret *= mul;
-			mul *= mul;
-			n >>= 1;
-		}
-		return ret;
-	}
-
-	constexpr mint inverse() const {
-		int x = get(), y = mod, u = 1, v = 0, t = 0, tmp = 0;
-		while (y > 0) {
-			t = x / y;
-			x -= t * y, u -= t * v;
-			tmp = x, x = y, y = tmp;
-			tmp = u, u = v, v = tmp;
-		}
-		return mint{u};
-	}
-
-	friend std::ostream &operator<<(std::ostream &os, const mint &b) {
-		return os << b.get();
-	}
-
-	friend std::istream &operator>>(std::istream &is, mint &b) {
-		int64_t t;
-		is >> t;
-		b = LazyMontgomeryModInt<mod>(t);
-		return (is);
-	}
-
-	constexpr u32 get() const {
-		u32 ret = reduce(a);
-		return ret >= mod ? ret - mod : ret;
-	}
-
-	static constexpr u32 get_mod() { return mod; }
-};
-// ===== END INCLUDE: ../../modint/montgomery-modint.hpp =====
-// ===== BEGIN INCLUDE: ../../graph/graph-template.hpp =====
+// ===== BEGIN INCLUDE: ../graph/graph-template.hpp =====
 
 #include <vector>
 #include <iostream>
@@ -858,39 +752,69 @@ WeightedGraph<T> wgraph(int N, int M = -1, bool is_directed = false, bool is_1or
 	}
 	return g;
 }
-// ===== END INCLUDE: ../../graph/graph-template.hpp =====
+// ===== END INCLUDE: ../graph/graph-template.hpp =====
 
-using mint = LazyMontgomeryModInt<998244353>;
+// unreachable -> -1
+template <typename T>
+vector<T> dijkstra(WeightedGraph<T> &g, vector<int> start) {
+	using P = pair<T, int>;
+	int N = (int)g.size();
+	vector<T> d(N, T(-1));
+	priority_queue<P, vector<P>, greater<P> > Q;
+	for (auto v : start) {
+		d[v] = 0;
+		Q.emplace(0, v);
+	}
+	while (!Q.empty()) {
+		P p = Q.top();
+		Q.pop();
+		int cur = p.second;
+		if (d[cur] < p.first) continue;
+		for (auto dst : g[cur]) {
+			if (d[dst] == T(-1) || d[cur] + dst.cost < d[dst]) {
+				d[dst] = d[cur] + dst.cost;
+				Q.emplace(d[dst], dst);
+			}
+		}
+	}
+	return d;
+}
+
+template <typename T>
+vector<T> dijkstra(WeightedGraph<T> &g, int start = 0) {
+	vector<int> st;
+	st.emplace_back(start);
+	return dijkstra(g, st);
+}
+
+/**
+ * @brief ダイクストラ法
+ * @docs docs/shortest-path/dijkstra.md
+ */
+// ===== END INCLUDE: ../../shortest-path/dijkstra.hpp =====
+
 void yamada::solve()
 {
-	IN(N);
-	auto g=graph(N);
-	IN(S=STR,T=STR);
-	each(c,S)c-='0';
-	each(c,T)c-='0';
-	vl memo(N,-1);
-	bool ans=1;
-	[&](this auto dfs,ll u,ll p=-1,ll dep=0,bool kuri=false)->void{
-		{
-			ll m=S[u]^T[u]^kuri;
-			if(memo[dep]>=0 && m^memo[dep])ans=0;
-			memo[dep]=m;
+	IN(N,M,K);
+	auto idx=[&](ll k,ll u)->ll{return k*N+u;};
+	WeightedGraph<ll> g(N*(K+1));
+	rep(M){
+		IN(u,v,a,b,s,t); --u; --v; a*=2; b*=2;
+		rep(2){
+			swap(a,b); swap(s,t);
+			rep(k,K+1){
+				ll nk=k+a;
+				if(nk>K)continue;
+				g[idx(k,u)].eb(idx(nk,v),s);
+				g[idx(k,v)].eb(idx(nk,u),s);
+			}
 		}
-		kuri=(!T[u]&&kuri || (!T[u]||kuri)&&S[u]);
-		err(u,p,kuri);
-		each(v,g[u])if(v!=p){
-			dfs(v,u,dep+1,kuri);
-		}
-	}(0);
-	if(!ans)DIE(-1);
-	err(memo);
-
-	mint cof=1;
-	mint bns=0;
-	each(c,memo){
-		if(c<0)break;
-		bns+=cof*c;
-		cof*=2;
 	}
-	out(bns);
+	ll ans=infLL;
+	auto dp=dijkstra(g);
+	rep(k,K+1){
+		ll d=dp[idx(k,N-1)];
+		if(d>=0)amin(ans,d);
+	}
+	out(ans==infLL?-1:ans);
 }

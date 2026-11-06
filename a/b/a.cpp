@@ -2,12 +2,12 @@
 
 void yamada::solve()
 {
-	ll K=3;
-	IN(A=LL*3);
-	ll N=Sum(A);
-	string T="PRS";
-	string ans;
-	ll mx=MaxElement(A)-A.begin();
-	rep(N)ans+=T[mx];
+	IN(N,A=LL*N);
+	ll ans=infLL;
+	each(a,A){
+		ll bns=0;
+		each(b,A)if(b%a)++bns;
+		amin(ans,bns);
+	}
 	out(ans);
 }

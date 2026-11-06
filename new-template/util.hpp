@@ -49,8 +49,8 @@ pair<T, U> mkp(const T &t, const U &u) { return make_pair(t, u); }
 template <typename... Args>
 tuple<Args...> mkt(const Args&... args) { return make_tuple(args...); }
 
-template <ranges::input_range R>
-ranges::range_value_t<R> Sum(const R &v) { return ranges::fold_left(v, ranges::range_value_t<R>(0), plus()); }
+/* template <ranges::input_range R> */
+/* ranges::range_value_t<R> Sum(const R &v) { return ranges::fold_left(v, ranges::range_value_t<R>(0), plus()); } */
 
 template <typename T>
 int lb(const vector<T> &v, const T &a) { return ranges::lower_bound(v, a) - v.begin(); }
@@ -208,9 +208,6 @@ T bisearch(F f, int iter = 100) { return bisearch(T(0), f, iter); }
 
 template <typename T0, typename T1, typename T2>
 bool inLR(T0 L, T1 x, T2 R){ return L <= x && x < R; }
-bool YESNO(bool b) { cout << (b ? "YES\n" : "NO\n"); return b; }
-bool YesNo(bool b) { cout << (b ? "Yes\n" : "No\n"); return b; }
-bool yesno(bool b) { cout << (b ? "yes\n" : "no\n"); return b; }
 
 long long Isqrt(long long n) {
 	if (n <= 0) return 0;

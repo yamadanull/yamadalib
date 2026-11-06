@@ -1,18 +1,21 @@
 ・工事中
 
 現状の不満
-・変数 x に処理 f, g, h を施すとき、h(g(f(x))) と書かなくてはならない。これは読むときも書くときも脳みそに優しくない。x|f|g|h と書きたい。
+・変数 x に処理 f, g, h を施すとき、h(g(f(x))) と書かなくてはならないことが多い。これは読むときも書くときも脳みそに優しくない。x.f().g().h()や x|f|g|h などと書きたい
 ・views によってその問題は1割ぐらい解決されたが、タンピング数が終わってる。特にラムダを渡すとき
 ・要素がtupleのとき、ラムダ系のranges関数に渡すと一つの引数にtupleを渡さなければならないゴミ仕様をどうにかしたい
+・ranges にワンライナーに役立ちそうな便利関数がいっぱいあるのに、今の書きにくさ・読みにくさのせいでわざわざ使う気になれない。ワンライナーを書く気にさせるテンプレートがほしい
+・Ruby ワンライナーの書きやすさを目標にする
 
 設計
+・out(...) で python の print(...) と同じ処理がされる。それを out = ... でできるようにする（結合順序的にこれが便利）
 ・views のアダプタ関数は自作できるらしいので、それを作りまくる。
 ・views ではない ranges 関数も使いたいものはパイプで渡せるようにする
 ・テンプレートにないライブラリもパイプで渡せるようにしたいけど（転倒数とか）どうしよう
 
 ・基本、元の名前のアッパーキャメルケースにする
 ・例外
-	views::transform -> Map 
+	views::transform -> Map
 	views::reverse -> Rev
 	ranges::fold_left -> Fold
 	ranges::fold_right -> rFold
@@ -21,17 +24,26 @@
 
 ・自作したい
 	Bisearch
-	Range（python の range(...) と同じ）
+	MinIndex
+	MaxIndex
+	MinBy
+	MaxBy
+	Sorted
+	FindIndex
+	Range（python の range(...) と同じ）（Iota、Rev、Stride で代替可能）
 	Permutation
-	Sum
-	out
+	Sum (ラムダ式渡せる)
+	Add
+	Out
 	YesNo
 
 ・ラムダ式を渡す関数は << で渡す（多重カッコによる複雑化の解消）（結合順序的に << がベストだと思った）
-	ex) auto B = A | Map << [&](auto a){ return a * 2; }
+	ex) auto B = A | Map << [&](auto a){ return a * 2; } | rtov
+・渡すものが tuple だったとき、複数の引数で取れる
+	ex) auto B = A | Enumerate | Map << [&](auto i, auto a){ return i + a; } | rtov
 
-・MAP(a, A) {処理} で A|views::transform([&](auto a){処理}) と等価（波括弧は必須。returnと`;`を忘れない）
-・EACH(a, A) {処理} で ranges::for_each(A,[&](auto a){処理}) と等価（波括弧は必須。`;`を忘れない）
+・A|MAP(args...) {処理} で A | Map << [&](...) {処理} と等価（波括弧は必須。returnと`;`を忘れない）
+・A|EACH(args...) {処理} で A | ForEach << [&](...) {処理} と等価（波括弧は必須。`;`を忘れない）
 
 考える必要のあること
 ・破壊的変更をするranges関数に一貫した命名をしたい。これはパイプで渡す

@@ -7,7 +7,8 @@ using namespace std;
 #include "bitop.hpp"
 #include "io.hpp"
 #include "io-extension.hpp"
-#include "adaptor.hpp"
+#include "ranges-adaptor.hpp"
+#include "views-adaptor.hpp"
 #include "macro.hpp"
 
 namespace yamada {

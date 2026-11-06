@@ -1,0 +1,64 @@
+{
+  "contest": {
+    "id": "awc0169",
+    "title": "AtCoder Weekday Contest 0169 Beta",
+    "url": "https://atcoder.jp/contests/awc0169"
+  },
+  "tasks": [
+    {
+      "id": "awc0169_a",
+      "label": "A",
+      "title": "Loading and Unloading",
+      "url": "https://atcoder.jp/contests/awc0169/tasks/awc0169_a",
+      "directory": {
+        "path": "a",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "awc0169_b",
+      "label": "B",
+      "title": "Selection of Delivery Trucks",
+      "url": "https://atcoder.jp/contests/awc0169/tasks/awc0169_b",
+      "directory": {
+        "path": "b",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "awc0169_c",
+      "label": "C",
+      "title": "Pairing Network",
+      "url": "https://atcoder.jp/contests/awc0169/tasks/awc0169_c",
+      "directory": {
+        "path": "c",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "awc0169_d",
+      "label": "D",
+      "title": "Disruption of Communication Network",
+      "url": "https://atcoder.jp/contests/awc0169/tasks/awc0169_d",
+      "directory": {
+        "path": "d",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "awc0169_e",
+      "label": "E",
+      "title": "Traveling with Discount Coupons",
+      "url": "https://atcoder.jp/contests/awc0169/tasks/awc0169_e",
+      "directory": {
+        "path": "e",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

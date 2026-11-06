@@ -1,0 +1,64 @@
+{
+  "contest": {
+    "id": "awc0174",
+    "title": "AtCoder Weekday Contest 0174 Beta",
+    "url": "https://atcoder.jp/contests/awc0174"
+  },
+  "tasks": [
+    {
+      "id": "awc0174_a",
+      "label": "A",
+      "title": "Make It to the Station",
+      "url": "https://atcoder.jp/contests/awc0174/tasks/awc0174_a",
+      "directory": {
+        "path": "a",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "awc0174_b",
+      "label": "B",
+      "title": "Beverage Vending Machine",
+      "url": "https://atcoder.jp/contests/awc0174/tasks/awc0174_b",
+      "directory": {
+        "path": "b",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "awc0174_c",
+      "label": "C",
+      "title": "Perfect Pairs",
+      "url": "https://atcoder.jp/contests/awc0174/tasks/awc0174_c",
+      "directory": {
+        "path": "c",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "awc0174_d",
+      "label": "D",
+      "title": "Road Construction and Shortest Path",
+      "url": "https://atcoder.jp/contests/awc0174/tasks/awc0174_d",
+      "directory": {
+        "path": "d",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "awc0174_e",
+      "label": "E",
+      "title": "Parenthesis Sequence and Stack Overflow",
+      "url": "https://atcoder.jp/contests/awc0174/tasks/awc0174_e",
+      "directory": {
+        "path": "e",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}

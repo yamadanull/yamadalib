@@ -72,12 +72,40 @@ ostream& operator<<(ostream& os, const R& a) {
 
 template <class... T>
 void in(T&&... x) { (cin >> ... >> x); }
-template <class... T>
-void out (const T&... x) { bool f{}; (..., (cout << (exchange(f, 1) ? " " : "") << x)); cout << '\n'; }
-template <class... T> // "Flush after OUT"
-void fout(const T&... x) { bool f{}; (..., (cout << (exchange(f, 1) ? " " : "") << x)); cout << endl; }
-template <class... T> // "WithOUT ln"
-void wout(const T&... x) { bool f{}; (..., (cout << (exchange(f, 1) ? " " : "") << x)); }
+////////////////////////////////////////////////////////////
+template <bool FLUSH = false>
+struct _out {
+	template <class T>
+	void operator=(const T& x) const {
+		cout << x << "\n";
+		if constexpr (FLUSH) cout.flush();
+	}
+	template <class... T>
+	void operator()(const T&... x) const {
+		bool f{};
+		(..., (cout << (exchange(f, 1) ? " " : "") << x));
+		cout << '\n';
+		if constexpr (FLUSH) cout.flush();
+	}
+};
+struct _YESNO {
+	bool operator= (const bool& b) const { cout << (b ? "YES\n" : "NO\n"); return b; }
+	bool operator()(const bool& b) const { cout << (b ? "YES\n" : "NO\n"); return b; }
+};
+struct _YesNo {
+	bool operator= (const bool& b) const { cout << (b ? "Yes\n" : "No\n"); return b; }
+	bool operator()(const bool& b) const { cout << (b ? "Yes\n" : "No\n"); return b; }
+};
+struct _yesno {
+	bool operator= (const bool& b) const { cout << (b ? "yes\n" : "no\n"); return b; }
+	bool operator()(const bool& b) const { cout << (b ? "yes\n" : "no\n"); return b; }
+};
+inline constexpr _out<false> out{};
+inline constexpr _out<true> fout{};
+inline constexpr _YESNO YESNO{};
+inline constexpr _YesNo YesNo{};
+inline constexpr _yesno yesno{};
+////////////////////////////////////////////////////////////
 
 struct IoSetupYamada {
 	IoSetupYamada() {
