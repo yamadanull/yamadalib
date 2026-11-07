@@ -1,29 +1,22 @@
-#include "../../template/template.hpp"
-#include "../../segment-tree/lazy-segment-tree-utility.hpp"
+#include "../../template/multitest-template.hpp"
 
 void yamada::solve()
 {
-	LL(N,B,C);
-	vl A(N); IN(A);
-	ll ans=-infLL;
-	FOR(msk,1<<N){
-		auto G=tog(msk,N);
-		if(![&](){
-			for(ll l=0,r=0; l<N; l=r){
-				while(r<N && G[l]==G[r])++r;
-				if(msk>>l&1){
-					if(r-l>=C)return 0;
-				}
-				else{
-					if(r-l>=B)return 0;
-				}
-			}
-			return 1;
-		}())continue;
-
-		ll bns=0;
-		FOR(i,N)if(msk>>i&1)bns+=A[i];
-		amax(ans,bns);
+	IN(N,A=LL*N);
+	auto F=[&](ll a)->ll{
+		if(a<0)return infLL;
+		if(a==0)return 1;
+		ll ans=0;
+		rep(t,msb(a))if(!(a>>t&1))++ans;
+		return ans;
+	};
+	auto check=[&](ll L)->bool{
+		rep(i,N)if(F(L+i)!=A[i])return 0;
+		return 1;
+	};
+	const int M=1<<13;
+	rep(i,M){
+		if(check(i))DIE(i);
 	}
-	OUT(ans);
+	out(-1);
 }

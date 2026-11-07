@@ -1,5 +1,5 @@
 /**
- * date    : 2026-11-05 20:14:10
+ * date    : 2026-11-07 02:20:09
  * author  : yamadanull
  * library : https://github.com/yamadanull/yamadalib/
  */
@@ -696,125 +696,235 @@ void solve();
 }
 int main() { yamada::solve(); }
 // ===== END INCLUDE: ../../template/template.hpp =====
-// ===== BEGIN INCLUDE: ../../shortest-path/dijkstra.hpp =====
+// ===== BEGIN INCLUDE: ../../modulo/binomial.hpp =====
 
-// ===== BEGIN INCLUDE: ../graph/graph-template.hpp =====
-
+#include <cassert>
+#include <type_traits>
 #include <vector>
-#include <iostream>
 
+// コンストラクタの MAX に 「C(n, r) や fac(n) でクエリを投げる最大の n 」
+// を入れると倍速くらいになる
+// mod を超えて前計算して 0 割りを踏むバグは対策済み
 template <typename T>
-struct edge {
-	int src, to;
-	T cost;
+struct Binomial {
+	std::vector<T> f, g, h;
+	Binomial(int MAX = 0) {
+		assert(T::get_mod() != 0 && "Binomial<mint>()");
+		f.resize(1, T{1});
+		g.resize(1, T{1});
+		h.resize(1, T{1});
+		if (MAX > 0) extend(MAX + 1);
+	}
 
-	edge(int _to, T _cost) : src(-1), to(_to), cost(_cost) {}
-	edge(int _src, int _to, T _cost) : src(_src), to(_to), cost(_cost) {}
+	void extend(int m = -1) {
+		int n = f.size();
+		if (m == -1) m = n * 2;
+		m = min<int>(m, T::get_mod());
+		if (n >= m) return;
+		f.resize(m);
+		g.resize(m);
+		h.resize(m);
+		for (int i = n; i < m; i++) f[i] = f[i - 1] * T(i);
+		g[m - 1] = f[m - 1].inverse();
+		h[m - 1] = g[m - 1] * f[m - 2];
+		for (int i = m - 2; i >= n; i--) {
+			g[i] = g[i + 1] * T(i + 1);
+			h[i] = g[i] * f[i - 1];
+		}
+	}
 
-	edge &operator=(const int &x) {
-		to = x;
+	T fac(int i) {
+		if (i < 0) return T(0);
+		while (i >= (int)f.size()) extend();
+		return f[i];
+	}
+
+	T finv(int i) {
+		if (i < 0) return T(0);
+		while (i >= (int)g.size()) extend();
+		return g[i];
+	}
+
+	T inv(int i) {
+		if (i < 0) return -inv(-i);
+		while (i >= (int)h.size()) extend();
+		return h[i];
+	}
+
+	T C(int n, int r) {
+		if (n < 0 || n < r || r < 0) return T(0);
+		return fac(n) * finv(n - r) * finv(r);
+	}
+
+	inline T operator()(int n, int r) { return C(n, r); }
+
+	template <typename I>
+	T multinomial(const std::vector<I>& r) {
+		static_assert(std::is_integral<I>::value == true);
+		int n = 0;
+		for (auto& x : r) {
+			if (x < 0) return T(0);
+			n += x;
+		}
+		T res = fac(n);
+		for (auto& x : r) res *= finv(x);
+		return res;
+	}
+
+	template <typename I>
+	T operator()(const std::vector<I>& r) {
+		return multinomial(r);
+	}
+
+	T C_naive(int n, int r) {
+		if (n < 0 || n < r || r < 0) return T(0);
+		T ret = T(1);
+		r = std::min(r, n - r);
+		for (int i = 1; i <= r; ++i) ret *= inv(i) * (n--);
+		return ret;
+	}
+
+	T P(int n, int r) {
+		if (n < 0 || n < r || r < 0) return T(0);
+		return fac(n) * finv(n - r);
+	}
+
+	// [x^r] 1 / (1-x)^n
+	T H(int n, int r) {
+		if (n < 0 || r < 0) return T(0);
+		return r == 0 ? 1 : C(n + r - 1, r);
+	}
+};
+// ===== END INCLUDE: ../../modulo/binomial.hpp =====
+// ===== BEGIN INCLUDE: ../../modint/montgomery-modint.hpp =====
+
+#include <cstdint>
+#include <iostream>
+#include <ostream>
+
+template <std::uint32_t mod>
+struct LazyMontgomeryModInt {
+	using mint = LazyMontgomeryModInt;
+	using i32 = std::int32_t;
+	using u32 = std::uint32_t;
+	using u64 = std::uint64_t;
+
+	static constexpr u32 get_r() {
+		u32 ret = mod;
+		for (i32 i = 0; i < 4; ++i) ret *= 2 - mod * ret;
+		return ret;
+	}
+
+	static constexpr u32 r = get_r();
+	static constexpr u32 n2 = -u64(mod) % mod;
+	static_assert(mod < (1 << 30), "invalid, mod >= 2 ^ 30");
+	static_assert((mod & 1) == 1, "invalid, mod % 2 == 0");
+	static_assert(r * mod == 1, "this code has bugs.");
+
+	u32 a;
+
+	constexpr LazyMontgomeryModInt() : a(0) {}
+	constexpr LazyMontgomeryModInt(const int64_t &b)
+			: a(reduce(u64(b % mod + mod) * n2)){};
+
+	static constexpr u32 reduce(const u64 &b) {
+		return (b + u64(u32(b) * u32(-r)) * mod) >> 32;
+	}
+
+	constexpr mint &operator+=(const mint &b) {
+		if (i32(a += b.a - 2 * mod) < 0) a += 2 * mod;
 		return *this;
 	}
 
-	operator int() const { return to; }
-};
-template <typename T>
-using Edges = std::vector<edge<T>>;
-template <typename T>
-using WeightedGraph = std::vector<Edges<T>>;
-using UnweightedGraph = std::vector<std::vector<int>>;
-
-// Input of (Unweighted) Graph
-UnweightedGraph graph(int N, int M = -1, bool is_directed = false, bool is_1origin = true) {
-	UnweightedGraph g(N);
-	if (M == -1) M = N - 1;
-	for (int _ = 0; _ < M; _++) {
-		int x, y;
-		std::cin >> x >> y;
-		if (is_1origin) x--, y--;
-		g[x].push_back(y);
-		if (!is_directed) g[y].push_back(x);
+	constexpr mint &operator-=(const mint &b) {
+		if (i32(a -= b.a) < 0) a += 2 * mod;
+		return *this;
 	}
-	return g;
-}
 
-// Input of Weighted Graph
-template <typename T>
-WeightedGraph<T> wgraph(int N, int M = -1, bool is_directed = false, bool is_1origin = true) {
-	WeightedGraph<T> g(N);
-	if (M == -1) M = N - 1;
-	for (int _ = 0; _ < M; _++) {
-		int x, y; std::cin >> x >> y;
-		T c; std::cin >> c;
-		if (is_1origin) x--, y--;
-		g[x].emplace_back(x, y, c);
-		if (!is_directed) g[y].emplace_back(y, x, c);
+	constexpr mint &operator*=(const mint &b) {
+		a = reduce(u64(a) * b.a);
+		return *this;
 	}
-	return g;
-}
-// ===== END INCLUDE: ../graph/graph-template.hpp =====
 
-// unreachable -> -1
-template <typename T>
-vector<T> dijkstra(WeightedGraph<T> &g, vector<int> start) {
-	using P = pair<T, int>;
-	int N = (int)g.size();
-	vector<T> d(N, T(-1));
-	priority_queue<P, vector<P>, greater<P> > Q;
-	for (auto v : start) {
-		d[v] = 0;
-		Q.emplace(0, v);
+	constexpr mint &operator/=(const mint &b) {
+		*this *= b.inverse();
+		return *this;
 	}
-	while (!Q.empty()) {
-		P p = Q.top();
-		Q.pop();
-		int cur = p.second;
-		if (d[cur] < p.first) continue;
-		for (auto dst : g[cur]) {
-			if (d[dst] == T(-1) || d[cur] + dst.cost < d[dst]) {
-				d[dst] = d[cur] + dst.cost;
-				Q.emplace(d[dst], dst);
-			}
+
+	constexpr mint operator+(const mint &b) const { return mint(*this) += b; }
+	constexpr mint operator-(const mint &b) const { return mint(*this) -= b; }
+	constexpr mint operator*(const mint &b) const { return mint(*this) *= b; }
+	constexpr mint operator/(const mint &b) const { return mint(*this) /= b; }
+	constexpr bool operator==(const mint &b) const {
+		return (a >= mod ? a - mod : a) == (b.a >= mod ? b.a - mod : b.a);
+	}
+	constexpr bool operator!=(const mint &b) const {
+		return (a >= mod ? a - mod : a) != (b.a >= mod ? b.a - mod : b.a);
+	}
+	constexpr mint operator-() const { return mint() - mint(*this); }
+	constexpr mint operator+() const { return mint(*this); }
+
+	constexpr mint pow(u64 n) const {
+		mint ret(1), mul(*this);
+		while (n > 0) {
+			if (n & 1) ret *= mul;
+			mul *= mul;
+			n >>= 1;
 		}
+		return ret;
 	}
-	return d;
-}
 
-template <typename T>
-vector<T> dijkstra(WeightedGraph<T> &g, int start = 0) {
-	vector<int> st;
-	st.emplace_back(start);
-	return dijkstra(g, st);
-}
+	constexpr mint inverse() const {
+		int x = get(), y = mod, u = 1, v = 0, t = 0, tmp = 0;
+		while (y > 0) {
+			t = x / y;
+			x -= t * y, u -= t * v;
+			tmp = x, x = y, y = tmp;
+			tmp = u, u = v, v = tmp;
+		}
+		return mint{u};
+	}
 
-/**
- * @brief ダイクストラ法
- * @docs docs/shortest-path/dijkstra.md
- */
-// ===== END INCLUDE: ../../shortest-path/dijkstra.hpp =====
+	friend std::ostream &operator<<(std::ostream &os, const mint &b) {
+		return os << b.get();
+	}
 
+	friend std::istream &operator>>(std::istream &is, mint &b) {
+		int64_t t;
+		is >> t;
+		b = LazyMontgomeryModInt<mod>(t);
+		return (is);
+	}
+
+	constexpr u32 get() const {
+		u32 ret = reduce(a);
+		return ret >= mod ? ret - mod : ret;
+	}
+
+	static constexpr u32 get_mod() { return mod; }
+};
+// ===== END INCLUDE: ../../modint/montgomery-modint.hpp =====
+
+using mint = LazyMontgomeryModInt<998244353>;
+Binomial<mint> binom;
 void yamada::solve()
 {
-	IN(N,M,K);
-	auto idx=[&](ll k,ll u)->ll{return k*N+u;};
-	WeightedGraph<ll> g(N*(K+1));
-	rep(M){
-		IN(u,v,a,b,s,t); --u; --v; a*=2; b*=2;
-		rep(2){
-			swap(a,b); swap(s,t);
-			rep(k,K+1){
-				ll nk=k+a;
-				if(nk>K)continue;
-				g[idx(k,u)].eb(idx(nk,v),s);
-				g[idx(k,v)].eb(idx(nk,u),s);
-			}
-		}
+	ll M=1<<20;
+	vc<mint> dp(M);
+	vc<mint> ep(M);
+	vc<mint> pw(M,1);
+	rep(i,1,M)pw[i]=pw[i-1]*2;
+	rep(i,2,M-1){
+		ep[i+1]+=ep[i]*pw[i-1]*pw[i+1];
+		ep[i+1]+=pw[i-1]*(pw[i-1]-1)*binom.inv(2)*pw[i+1];
+		ep[i+1]+=(pw[i-1]-1)*pw[i];
+		dp[i+1]+=ep[i]*pw[i-1];
+		dp[i+1]+=pw[i-1]*(pw[i-1]+1)*binom.inv(2)-1;
 	}
-	ll ans=infLL;
-	auto dp=dijkstra(g);
-	rep(k,K+1){
-		ll d=dp[idx(k,N-1)];
-		if(d>=0)amin(ans,d);
+
+	IN(T);
+	while(T--){
+		IN(n);
+		out(dp[n]+1);
 	}
-	out(ans==infLL?-1:ans);
 }

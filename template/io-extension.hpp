@@ -49,7 +49,7 @@ struct GEN {
 	auto operator++() const {
 		return ioImpl::GEN{[p = *this](long long i) { return p(i) + 1; }};
 	}
-	auto operator~() { // 例: BIND(L, R) = ~PR(--LL, LL)[N]()
+	auto operator~() { // 例: IN(BIND(L, R) = ~PR(--LL, LL)[N])
 		return ioImpl::GEN{[p = *this](long long i) {
 			auto v = p(i);
 			using T = ranges::range_value_t<decltype(v)>;
@@ -92,7 +92,6 @@ using ioImpl::TP;
 
 }  // namespace yamada
 
-#define FN(i,...) yamada::ioImpl::GEN{[&](long long i) { return (__VA_ARGS__); }} // これ衝突怖い
 #define IN(...) __VA_OPT__(IOIMPL_E3(IOIMPL_EACH(__VA_ARGS__))) // これ衝突怖い
 #define BIND(...) ([__VA_ARGS__])
 

@@ -2,10 +2,16 @@
 
 void yamada::solve()
 {
-	IN(L,R);
-	if(L*R>0)DIE(R-L);
-	ll l=-L;
-	ll r=R;
-	if(l>r)swap(l,r);
-	out(max<ll>(0,r-l-1));
+	IN(N,A=LL*N);
+	Sort(A,greater{});
+	ll cur=0;
+	ll sm=0;
+	each(a,A){
+		if(cur<0)cur+=1LL<<a;
+		else cur-=1LL<<a;
+		sm+=1LL<<a;
+	}
+	ll x=(cur+sm)/2;
+	ll y=sm-x;
+	out(x*y);
 }

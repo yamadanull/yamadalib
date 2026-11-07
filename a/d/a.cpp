@@ -1,29 +1,46 @@
-#include "../../template/multitest-template.hpp"
+#include "../../template/template.hpp"
 #include "../../tree/tree-query.hpp"
-#include "../../graph/graph-template.hpp"
 using namespace yamada;
 
-bool check(Tree<UnweightedGraph>& tree,ll K,ll pos){
-	ll N=tree.size(0);
-	rep(u,K+1){
-		ll v=K-u;
-		if(!inLR(0,v,N)||!inLR(0,u,N))continue;
-		if(u==v)continue;
-		if(tree.len(u,v)==tree.len(u,pos)+tree.len(pos,v)){
-			err(u,pos,v);
-			return 1;
-		}
+void cal1(){
+	IN(N,S=STR);
+	if(Count(S,'0')==N-1){
+		out(N);
+		rep(i,N-1)out(i+1,i+2);
+		out(1,3);
+		return;
 	}
-	return 0;
+	out(N-1);
+	ll U=-1;
+	rep(i,N-1)if(S[i]=='1'){
+		out(N,i+1);
+		U=i;
+	}
+	rep(i,N-1)if(S[i]=='0'){
+		out(U+1,i+1);
+	}
+}
+
+void cal2(){
+	IN(N,M);
+	auto g=graph(N,M);
+	string ans;
+	if(N<=M){
+		rep(N-1)ans+='0';
+		DIE(ans);
+	}
+	Tree tree(g,N-1);
+	rep(i,N-1){
+		err(i,tree.depth(i));
+		ans+=tree.depth(i)%2+'0';
+	}
+	out(ans);
 }
 
 void yamada::solve()
 {
-	IN(N);
-	auto g=graph(N);
-	if(N%2==0)DIE(N+1);
-	Tree tree(g);
-	if(check(tree,N-1,(N-1)/2))DIE(N+1);
-	if(check(tree,N,0))DIE(N+2);
-	DIE(N);
+	IN(S=STR,T);
+	while(T--){
+		S[0]=='f'?cal1():cal2();
+	}
 }
