@@ -1,22 +1,18 @@
 #include "../../template/multitest-template.hpp"
+#include "../../graph/graph-template.hpp"
+#include "../../shortest-path/bfs.hpp"
 
 void yamada::solve()
 {
-	IN(N,A=LL*N);
-	auto F=[&](ll a)->ll{
-		if(a<0)return infLL;
-		if(a==0)return 1;
-		ll ans=0;
-		rep(t,msb(a))if(!(a>>t&1))++ans;
-		return ans;
-	};
-	auto check=[&](ll L)->bool{
-		rep(i,N)if(F(L+i)!=A[i])return 0;
-		return 1;
-	};
-	const int M=1<<13;
-	rep(i,M){
-		if(check(i))DIE(i);
+	IN(N,M,W,X,Y,Z); --W; --X; --Y; --Z;
+	auto g=graph(N,M);
+	UnweightedGraph G(N*N);
+	auto idx=[&](ll U,ll u)->ll{return U*N+u;};
+
+	rep(u,N)each(v,g[u]){
+		rep(i,N)G[idx(i,u)].eb(idx(i,v));
+		G[idx(u,v)].eb(idx(v,u));
 	}
-	out(-1);
+	auto dp=bfs(G,idx(W,X));
+	out(dp[idx(Y,Z)]);
 }

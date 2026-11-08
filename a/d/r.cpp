@@ -4,12 +4,17 @@
 
 void yamada::solve()
 {
-	ll N=randint(1,5);
-	ll B=randint(2,N+2);
-	ll C=randint(2,N+2);
-	vl A(N);
-	FOR_E(a,A)a=randint(1,10);
+	ll T=2;
+	out(T);
+	while(T--){
+		ll N=randint(2,6);
+		ll M=randint(N-1,N*(N-1)/2);
+		auto g=randgraph(N,M);
+		vl A(4);
+		each(a,A)a=randint(1,N+1);
 
-	OUT(N,B,C);
-	OUT(A);
+		out(N,M);
+		out(A);
+		print_edge(g);
+	}
 }

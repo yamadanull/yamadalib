@@ -1,51 +1,34 @@
 #include "../../template/multitest-template.hpp"
-#include "../../segment-tree/segment-tree.hpp"
-#include "../../monoid/generate-monoid.hpp"
-using namespace yamada;
+#include "../../modint/montgomery-modint.hpp"
 
-const int M=16;
-const int K=6;
-using T=array<array<ll,M>,M>;
-T ti(){
-	T ans;
-	each(a,ans|views::join)a=-infLL;
-	return ans;
-}
-T F(T X,T Y){
-	if(X==ti())return Y;
-	if(Y==ti())return X;
-	T ans=ti();
-	rep(i,M)rep(j,M)if(x[i][j]>=0)rep(I,M)rep(J,M)if(y[I][J]>=0){
-		rep(k,K){
-			ll bns=x[i][j]+y[I][J];
-			bns-=(j%3==0);
-			bns-=(I%3==0);
-			ll j2=j^(k*3);
-			ll I2=I^(k*3);
-			bns+=(j2%3==0);
-			bns+=(I2%3==0);
-			amax(ans[i][J],bns);
-		}
-	}
-	return ans;
-}
-T genT(ll A,ll B){
-	T ans=ti();
-	rep(k,K){
-		ll a=A^(k*3);
-		ll b=B^(k*3);
-		ans[a][b]=0;
-		ans[a][b]+=(a%3==0);
-		ans[a][b]+=(b%3==0);
-	}
-	return ans;
-}
-using Mono=MyMonoid<T,F,ti>;
-
+using mint = LazyMontgomeryModInt<998244353>;
 void yamada::solve()
 {
-	inl(N,Q);
-	vl A(N); in(A);
-	vc<T> init(N);
-	SegmentTree<Mono> seg(init);
+	IN(M);
+	ll N=M*3+10;
+	vl A(N);
+	rep(M)A[LL()]=1;
+	mint ans=M*(M-1)/2+M;
+	/* err(ans); */
+
+	CumulativeSum cum(A);
+	rep(m,3){
+		auto B=A;
+		rep(i,m,N,3)B[i]=1;
+		for(ll l=0,r=0; l<N; l=r){
+			while(r<N&&B[l]==B[r])++r;
+			if(!B[l])continue;
+			rep(i,l,r)if(A[i]&&i%3!=m){
+				ll rL=i+3;
+				amin(rL,r);
+				ans+=cum(rL,r);
+				err(m,l,i,r,ans);
+			}
+		}
+		/* err(m,ans); */
+	}
+	rep(i,N-3)if(A[i]&&A[i+1]&&A[i+2]){
+		ans+=1;
+	}
+	out(ans);
 }
