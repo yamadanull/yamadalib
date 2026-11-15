@@ -1,31 +1,41 @@
 #include "../../template/multitest-template.hpp"
 using namespace yamada;
 
-map<pr<vl,ll>,ll> memo;
-ll naive(vl A,ll K){
-	if(A.empty())return 0;
-	if(memo.count(mkp(A,K)))return memo[mkp(A,K)];
-	ll N=len(A);
-	ll ans=infLL;
-	FOR(i,N){
-		auto B=A;
-		if(B[i]<=K){
-			B.erase(B.begin()+i);
+void exper(){
+	IN(N);
+	map<vc<int>,bool> vis;
+	vis[mkiota(N)]=1;
+	queue<vc<int>> q;
+	q.emplace(mkiota(N));
+	map<vc<int>,vvc<int>> ans;
+	while(!q.empty()){
+		auto P=q.front(); q.pop();
+		ans[P|Stride(2)|rtov].eb(P|Drop(1)|Stride(2)|rtov);
+		rep(l,N-3){
+			swap(P[l],P[l+2]);
+			swap(P[l+1],P[l+3]);
+			if(!vis[P]){
+				vis[P]=1;
+				q.emplace(P);
+			}
+			swap(P[l],P[l+2]);
+			swap(P[l+1],P[l+3]);
 		}
-		else{
-			B[i]=(B[i]+1)/2;
-			B.eb(B[i]);
-		}
-		Sort(B);
-		amin(ans,naive(B,K+1)+1);
 	}
-	return memo[mkp(A,K)]=ans;
+
+	each(P_,PS_,ans){
+		auto P=P_;
+		auto PS=PS_;
+		each(e,P)e/=2;
+		each(e,PS|Join)e/=2;
+		err();
+		err(P);
+		each(p,PS)err("",p);
+	}
 }
 
 void yamada::solve()
 {
-	LL(N,K);
-	vl A(N); IN(A);
-	Sort(A);
-	FOUT(naive(A,K));
+	/* exper(); */
+	IN(S=STR,T=STR);
 }

@@ -1,0 +1,53 @@
+{
+  "contest": {
+    "id": "agc079",
+    "title": "AtCoder Grand Contest 079",
+    "url": "https://atcoder.jp/contests/agc079"
+  },
+  "tasks": [
+    {
+      "id": "agc079_a",
+      "label": "A",
+      "title": "Tree Contraction Sequence",
+      "url": "https://atcoder.jp/contests/agc079/tasks/agc079_a",
+      "directory": {
+        "path": "a",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc079_b",
+      "label": "B",
+      "title": "Range Record",
+      "url": "https://atcoder.jp/contests/agc079/tasks/agc079_b",
+      "directory": {
+        "path": "b",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc079_c",
+      "label": "C",
+      "title": "Sort by Queue and Reverse",
+      "url": "https://atcoder.jp/contests/agc079/tasks/agc079_c",
+      "directory": {
+        "path": "c",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    },
+    {
+      "id": "agc079_d",
+      "label": "D",
+      "title": "Yet Another Degree Sequence Problem",
+      "url": "https://atcoder.jp/contests/agc079/tasks/agc079_d",
+      "directory": {
+        "path": "d",
+        "testdir": "test",
+        "submit": "a.cpp"
+      }
+    }
+  ]
+}
