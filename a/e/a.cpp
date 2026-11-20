@@ -2,4 +2,3 @@
 
 void yamada::solve()
 {
-}

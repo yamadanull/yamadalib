@@ -1,26 +1,22 @@
 #include "../../template/template.hpp"
+#include "../../shortest-path/dijkstra.hpp"
+#include "../../graph/graph-template.hpp"
 
 void yamada::solve()
 {
-	const int M=20;
-	LL(N);
-	vp xy(N);
-	FOR_E(x,y,xy){
-		IN(x,y);
-		x*=2;
-		y*=2;
+	IN(N,M,Q,A=LL*N);
+	WeightedGraph<ll> g(N+1);
+	rep(i,1,M+1){
+		IN(u,v,w); --u; --v;
+		g[u].eb(v,w<<i);
+		g[v].eb(u,w<<i);
 	}
-
-	ll ans=infLL;
-	FOR(X,-M,M+1)FOR(Y,-M,M+1)FOR(X2,-M,M+1)FOR(Y2,-M,M+1){
-		ll bns=-infLL;
-		FOR_E(x,y,xy){
-			ll d=infLL;
-			amin(d,abs(x-X)+abs(y-Y));
-			amin(d,abs(x-X2)+abs(y-Y2));
-			amax(bns,d);
-		}
-		amin(ans,bns);
+	rep(u,N){
+		g[u].eb(N,A[u]);
+		g[N].eb(u,A[u]);
 	}
-	OUT(ans);
+	while(Q--){
+		IN(st,go); --st; --go;
+		out(dijkstra(g,st)[go]);
+	}
 }

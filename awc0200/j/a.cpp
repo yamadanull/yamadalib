@@ -20,12 +20,8 @@ void yamada::solve()
 			ll CR=seg.max_right(cx,[&](ll mn){return mn>=1;});
 			ll XL=cmp[CL];
 			ll XR=cmp[CR];
-			if(X-XL<XR-X){
-				X=XL;
-			}
-			else{
-				X=XR;
-			}
+			if(X-XL<XR-X)X=XL;
+			else X=XR;
 		}
 	}
 	out(X);

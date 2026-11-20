@@ -1,18 +1,15 @@
-#include "../../template/multitest-template.hpp"
-#include "../../graph/graph-template.hpp"
-#include "../../shortest-path/bfs.hpp"
+#include "../../template/template.hpp"
+#include "../../modint/montgomery-modint.hpp"
 
+using mint = LazyMontgomeryModInt<998244353>;
 void yamada::solve()
 {
-	IN(N,M,W,X,Y,Z); --W; --X; --Y; --Z;
-	auto g=graph(N,M);
-	UnweightedGraph G(N*N);
-	auto idx=[&](ll U,ll u)->ll{return U*N+u;};
-
-	rep(u,N)each(v,g[u]){
-		rep(i,N)G[idx(i,u)].eb(idx(i,v));
-		G[idx(u,v)].eb(idx(v,u));
+	IN(N,A=LL*N);
+	mint ans=0;
+	rep(l,N)rep(r,l+1,N+1){
+		ll x=Max(A|Take(r)|Drop(l));
+		ll y=Min(A|Take(r)|Drop(l));
+		ans+=(x-y)*(x-y);
 	}
-	auto dp=bfs(G,idx(W,X));
-	out(dp[idx(Y,Z)]);
+	out(ans);
 }
