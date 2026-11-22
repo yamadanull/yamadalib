@@ -1,10 +1,10 @@
 /**
- * date    : 2026-11-20 23:41:22
+ * date    : 2026-11-22 19:12:17
  * author  : yamadanull
  * library : https://github.com/yamadanull/yamadalib/
  */
 
-// ===== BEGIN INCLUDE: ../../template/template.hpp =====
+// ===== BEGIN INCLUDE: ../../template/multitest-template.hpp =====
 
 #include <bits/stdc++.h>
 #include <cassert>
@@ -192,32 +192,32 @@ vector<T> RotateGrid(const vector<T> &A) {
 }
 
 template <integral T, typename F>
-T bisearch(T ok, T ng, F f) { // ok < ng でも ok > ng でも可能 // f(ok) && !f(ng) が必要
+T bsearch(T ok, T ng, F f) { // ok < ng でも ok > ng でも可能 // f(ok) && !f(ng) が必要
 	while (abs(ok - ng) > 1) { T mid = (ok + ng) / 2; (f(mid) ? ok : ng) = mid; } 
 	return ok;
 }
 template <integral T, typename F> // 判定回数は上限を決め打ちした場合の高々２倍程度
-T bisearch(T l, F f) { // !f(l) && f(inf) が必要 (0000...1111...)
+T bsearch(T l, F f) { // !f(l) && f(inf) が必要 (0000...1111...)
 	T r = l + 1;
 	while (!f(r)) r += r - l;
-	return bisearch(r, l, f);
+	return bsearch(r, l, f);
 }
 template <integral T, typename F> 
-T bisearch(F f) { return bisearch(T(0), f); }
+T bsearch(F f) { return bsearch(T(0), f); }
 
 template <floating_point T, typename F>
-T bisearch(T ok, T ng, F f, int iter = 100) {
+T bsearch(T ok, T ng, F f, int iter = 100) {
 	while (iter--) { T mid = (ok + ng) / 2; (f(mid) ? ok : ng) = mid; } 
 	return ng;
 }
 template <floating_point T, typename F>
-T bisearch(T l, F f, int iter = 100) {
+T bsearch(T l, F f, int iter = 100) {
 	T r = l + 1;
 	while (!f(r)) r += r - l;
-	return bisearch(r, l, f, iter);
+	return bsearch(r, l, f, iter);
 }
 template <floating_point T, typename F>
-T bisearch(F f, int iter = 100) { return bisearch(T(0), f, iter); }
+T bsearch(F f, int iter = 100) { return bsearch(T(0), f, iter); }
 
 template <typename T0, typename T1, typename T2>
 bool inLR(T0 L, T1 x, T2 R){ return L <= x && x < R; }
@@ -694,28 +694,8 @@ constexpr auto Ofs(const int K = 1) { return views::transform(bind(plus(), place
 namespace yamada {
 void solve();
 }
-int main() { yamada::solve(); }
-// ===== END INCLUDE: ../../template/template.hpp =====
-// ===== BEGIN INCLUDE: ../../monoid/generate-monoid.hpp =====
-
-template <typename T, T (*op)(T, T), T (*ti)(), bool COMMUTATIVE = 0>
-struct MyMonoid {
-	using value_type = T;
-	static constexpr value_type O(const value_type& x, const value_type& y) { return op(x, y); }
-	static constexpr value_type I() { return ti(); }
-};
-
-// h(f, g)(x) : g(f(x))
-template <typename T, typename E, T (*f)(T, T), T (*g)(T, E, long long), E (*h)(E, E), T (*ti)(), E (*ei)(), bool X_COM = 0, bool A_COM = 0>
-struct MyActedMonoid {
-	using Monoid_X = MyMonoid<T, f, ti, X_COM>;
-	using Monoid_A = MyMonoid<E, h, ei, A_COM>;
-	using X = typename Monoid_X::value_type; // T
-	using A = typename Monoid_A::value_type; // E
-	static constexpr X O(const X& x, const A& a, const long long &size) { return g(x, a, size); }
-};
-
-// ===== END INCLUDE: ../../monoid/generate-monoid.hpp =====
+int main() { int T; cin >> T; while (T--) yamada::solve(); }
+// ===== END INCLUDE: ../../template/multitest-template.hpp =====
 // ===== BEGIN INCLUDE: ../../segment-tree/lazy-segment-tree-utility.hpp =====
 
 // ===== BEGIN INCLUDE: ../monoid/add-max.hpp =====
@@ -1268,154 +1248,20 @@ template <typename T>
 using updatesum_lazyseg = LazySegmentTree<ACTED_MONOID::Update_Sum<T>>;
 
 // ===== END INCLUDE: ../../segment-tree/lazy-segment-tree-utility.hpp =====
-// ===== BEGIN INCLUDE: ../../modint/montgomery-modint.hpp =====
-
-#include <cstdint>
-#include <iostream>
-#include <ostream>
-
-template <std::uint32_t mod>
-struct LazyMontgomeryModInt {
-	using mint = LazyMontgomeryModInt;
-	using i32 = std::int32_t;
-	using u32 = std::uint32_t;
-	using u64 = std::uint64_t;
-
-	static constexpr u32 get_r() {
-		u32 ret = mod;
-		for (i32 i = 0; i < 4; ++i) ret *= 2 - mod * ret;
-		return ret;
-	}
-
-	static constexpr u32 r = get_r();
-	static constexpr u32 n2 = -u64(mod) % mod;
-	static_assert(mod < (1 << 30), "invalid, mod >= 2 ^ 30");
-	static_assert((mod & 1) == 1, "invalid, mod % 2 == 0");
-	static_assert(r * mod == 1, "this code has bugs.");
-
-	u32 a;
-
-	constexpr LazyMontgomeryModInt() : a(0) {}
-	constexpr LazyMontgomeryModInt(const int64_t &b)
-			: a(reduce(u64(b % mod + mod) * n2)){};
-
-	static constexpr u32 reduce(const u64 &b) {
-		return (b + u64(u32(b) * u32(-r)) * mod) >> 32;
-	}
-
-	constexpr mint &operator+=(const mint &b) {
-		if (i32(a += b.a - 2 * mod) < 0) a += 2 * mod;
-		return *this;
-	}
-
-	constexpr mint &operator-=(const mint &b) {
-		if (i32(a -= b.a) < 0) a += 2 * mod;
-		return *this;
-	}
-
-	constexpr mint &operator*=(const mint &b) {
-		a = reduce(u64(a) * b.a);
-		return *this;
-	}
-
-	constexpr mint &operator/=(const mint &b) {
-		*this *= b.inverse();
-		return *this;
-	}
-
-	constexpr mint operator+(const mint &b) const { return mint(*this) += b; }
-	constexpr mint operator-(const mint &b) const { return mint(*this) -= b; }
-	constexpr mint operator*(const mint &b) const { return mint(*this) *= b; }
-	constexpr mint operator/(const mint &b) const { return mint(*this) /= b; }
-	constexpr bool operator==(const mint &b) const {
-		return (a >= mod ? a - mod : a) == (b.a >= mod ? b.a - mod : b.a);
-	}
-	constexpr bool operator!=(const mint &b) const {
-		return (a >= mod ? a - mod : a) != (b.a >= mod ? b.a - mod : b.a);
-	}
-	constexpr mint operator-() const { return mint() - mint(*this); }
-	constexpr mint operator+() const { return mint(*this); }
-
-	constexpr mint pow(u64 n) const {
-		mint ret(1), mul(*this);
-		while (n > 0) {
-			if (n & 1) ret *= mul;
-			mul *= mul;
-			n >>= 1;
-		}
-		return ret;
-	}
-
-	constexpr mint inverse() const {
-		int x = get(), y = mod, u = 1, v = 0, t = 0, tmp = 0;
-		while (y > 0) {
-			t = x / y;
-			x -= t * y, u -= t * v;
-			tmp = x, x = y, y = tmp;
-			tmp = u, u = v, v = tmp;
-		}
-		return mint{u};
-	}
-
-	friend std::ostream &operator<<(std::ostream &os, const mint &b) {
-		return os << b.get();
-	}
-
-	friend std::istream &operator>>(std::istream &is, mint &b) {
-		int64_t t;
-		is >> t;
-		b = LazyMontgomeryModInt<mod>(t);
-		return (is);
-	}
-
-	constexpr u32 get() const {
-		u32 ret = reduce(a);
-		return ret >= mod ? ret - mod : ret;
-	}
-
-	static constexpr u32 get_mod() { return mod; }
-};
-// ===== END INCLUDE: ../../modint/montgomery-modint.hpp =====
-using namespace yamada;
-
-using mint = LazyMontgomeryModInt<998244353>;
-using T=pair<mint,mint>;
-using E=mint;
-T F(T a,T b){return{a.fi+b.fi,a.se+b.se};}
-T G(T a,E f,ll siz){
-	a.se+=f*f*siz;
-	a.se+=a.fi*f*2;
-	a.fi+=f*siz;
-	return a;
-}
-E H(E f,E g){return f+g;}
-T ti(){return{0,0};}
-E ei(){return 0;}
-using AM=MyActedMonoid<T,E,F,G,H,ti,ei>;
 
 void yamada::solve()
 {
 	IN(N,A=LL*N);
-	vl stkmn{-1},stkmx{-1};
-	LazySegmentTree<AM>seg(vc<T>(N,ti()));
-	mint ans=0;
-	rep(i,N){
-		while(len(stkmn)>=2 && A[stkmn.back()]>=A[i]){
-			ll k=stkmn.back(); stkmn.pop_back();
-			ll j=stkmn.back();
-			seg.apply(j+1,k+1,A[k]-A[i]);
-		}
-		while(len(stkmx)>=2 && A[stkmx.back()]<=A[i]){
-			ll k=stkmx.back(); stkmx.pop_back();
-			ll j=stkmx.back();
-			seg.apply(j+1,k+1,A[i]-A[k]);
-		}
-		stkmx.eb(i);
-		stkmn.eb(i);
-		err(seg.get());
-		err(stkmn);
-		err(stkmx);
-		ans+=seg().se;
+	auto B=mkrui(A);
+	if(Min(B)<0)DIE(-1);
+	auto cmp=mkuni(B);
+	ll M=len(cmp);
+	sum_segtree<ll> seg(vl(M,0));
+	ll ans=0;
+	rep(r,N+1){
+		ll ci=lb(cmp,B[r]);
+		ans+=seg(ci+1,M);
+		seg.set(ci,seg[ci]+1);
 	}
 	out(ans);
 }
